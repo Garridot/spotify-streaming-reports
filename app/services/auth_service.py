@@ -39,9 +39,8 @@ class AuthService:
             # 2. Get user profile           
             user_info = self.spotify_service.get_user_info(tokens.access_token)
             # 3. Create/update user
-            user = self.user_repo.get_or_create(
-                email=user_info['email'],
-                spotify_id=user_info['id']
+            user = self.user_repo.get_or_create(                
+                email=user_info['email']
             )
             # 4. Store credentials
             self.spotify_repo.create_or_update(
@@ -59,7 +58,7 @@ class AuthService:
                 "user_info": {
                     "id": user.id,
                     "email": user.email,
-                    "spotify_id": user.spotify_id
+                    "spotify_id": user_info['id']
                 }
             }
             

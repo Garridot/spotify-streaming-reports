@@ -7,7 +7,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     """Properties to receive on user creation"""
-    spotify_id: str | None = None
+    id: str 
 
 class UserOut(UserBase):
     """Properties to return to client"""
