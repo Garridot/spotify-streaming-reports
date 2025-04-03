@@ -35,4 +35,5 @@ __pycache__/
 # SQLITE
 *.db 
 
+instance/
 migrations/
