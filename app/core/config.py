@@ -13,3 +13,11 @@ class Config:
     # Database
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///spotify.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Last.fm
+    LASTFM_API_KEY = os.getenv('LASTFM_API_KEY')
+    LASTFM_API_SECRET = os.getenv('LASTFM_API_SECRET')
+    LASTFM_CALLBACK_URL= os.getenv("LASTFM_CALLBACK_URL")
+
+    SECRET_KEY: str = os.getenv("SECRET_KEY")
+    JWT_ALGORITHM: str = "HS256"

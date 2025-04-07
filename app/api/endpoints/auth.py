@@ -1,5 +1,4 @@
 from flask import Blueprint, current_app, redirect, request, jsonify
-from app.dependencies import DIContainer
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
@@ -14,42 +13,32 @@ def login_spotify():
     Responses:    
         HTTP 302: Redirect to Spotify's authorization URL.
     """
-    container = current_app.container
-    auth_url = container.spotify_service.get_oauth_url()
+    spotify_service = current_app.container.spotify_service
+    auth_url = spotify_service.get_oauth_url()
     return redirect(auth_url)
 
 @auth_bp.route('/spotify/callback')
 def spotify_callback():
     """
-    Maneja el callback de autenticación de Spotify.   
-    
+    Handles the Spotify authentication callback.
     Args:
-        code: Código de autorización de Spotify        
-        
+        code: Spotify authorization code
     Returns:
-        TokenResponse: Tokens de acceso.
-        
+        TokenResponse: Access tokens.
     Raises:
-        HTTPException: Si ocurre algún error en el proceso
+        HTTPException: If an error occurs during the process
     """    
     try:
-        # Obtener servicio del contenedor        
-        auth_service = current_app.container.auth_service
-        result = auth_service.handle_spotify_callback(request.args.get('code'))
-        print(result)
-        # Convertir datetime a string ISO format
-        expires_at = result["tokens"].expires_at.isoformat() if result["tokens"].expires_at else None
-
+        oauth_service = current_app.container.sp_oauth_service
+        result = oauth_service.handle_spotify_callback(request.args.get('code'))
+        
         return jsonify({
-            "user_id": result["user_info"]["id"],
-            "access_token": result["tokens"].access_token,
-            "token_type": result["tokens"].token_type,
-            "expires_at": expires_at,
-            "spotify_id": result["user_info"]["spotify_id"]
+            "user": result["user"],
+            "tokens": {
+                "access": result["tokens"]["access"],
+                "refresh": result["tokens"]["refresh"]
+            }
         })
-
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Auth error: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({"error": str(e)}), 400

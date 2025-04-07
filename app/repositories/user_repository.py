@@ -6,15 +6,13 @@ class UserRepository:
     def __init__(self, db_session):
         self.db = db_session
 
+    def get_by_id(self, id: int):
+        """Finds user by id"""
+        return self.db.query(User).filter(User.id == id).first()
+
     def get_by_email(self, email: str):
         """Finds user by email"""
         return self.db.query(User).filter(User.email == email).first()
-
-    def get_by_spotify_id(self, spotify_id: str):
-        """Retrieves a user by primary key"""
-        from app.models.domain.spotify import SpotifyAccount
-        account = self.db.query(SpotifyAccount).filter_by(spotify_user_id=spotify_id).first()
-        return account.user if account else None
 
     def create(self, email: str):
         """
