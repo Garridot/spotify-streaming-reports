@@ -10,7 +10,7 @@ class AuthService:
         return user
         
     def create_or_update_user(self, email):
-        """Create / update user"""        
+        """Create or update user"""        
         user = self.user_repo.get_or_create(email=email) 
         return user
     
