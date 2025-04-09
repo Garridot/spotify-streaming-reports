@@ -3,6 +3,10 @@ from app.models.domain.lastfm import LastfmAccount
 class LastfmRepository:
     def __init__(self, db_session):
         self.db = db_session
+
+    def get_by_user_id(self, user_id: int) -> LastfmAccount:
+        """Retrieves Lastfm Account credentials by internal user ID"""
+        return self.db.query(LastfmAccount).filter(LastfmAccount.user_id == user_id).first()    
     
     def save_credentials(self, user_id: int, username: str, session_key: str):
         """Save or update Last.fm credentials"""

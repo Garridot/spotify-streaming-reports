@@ -15,11 +15,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)  
 
-    app.config['SECRET_KEY'] = Config.SECRET_KEY
-    register_blueprints(app) 
+    app.config['SECRET_KEY'] = Config.SECRET_KEY     
 
     jwt_manager.init_app(app)   
 
     app.container = Container(app)
+    register_blueprints(app)
     
     return app

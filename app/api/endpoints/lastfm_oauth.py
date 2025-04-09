@@ -1,9 +1,9 @@
 from flask import Blueprint, redirect, request, current_app, jsonify
 from app.core.security import token_required, refresh_token_required
 
-lastfm_bp = Blueprint('lastfm', __name__, url_prefix='/api/lastfm')
+oauth_bp = Blueprint('lastfm_oauth', __name__, url_prefix='/api/lastfm')
 
-@lastfm_bp.route('/login')
+@oauth_bp.route('/login')
 @token_required
 def lastfm_login(current_user):
     lastfm_service = current_app.container.lastfm_service
@@ -11,7 +11,7 @@ def lastfm_login(current_user):
     auth_url = lastfm_service.get_oauth_url(callback_url)
     return jsonify({"auth_url":auth_url}) 
 
-@lastfm_bp.route('/callback')
+@oauth_bp.route('/callback')
 @token_required
 def lastfm_callback(current_user):
     """Handles the Last.fm callback"""
