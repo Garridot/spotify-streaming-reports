@@ -62,10 +62,10 @@ class LastfmService:
             "format": "json"
         }
         
-        # Generar firma antes de codificar los valores
+        # Generate signature before encoding values
         params["api_sig"] = self._generate_api_sig(params)
         
-        # Codificar todos los valores para el envío POST
+        # Encode values ​​for POST submission
         encoded_params = {
             k: v for k, v in params.items()
         }
@@ -75,4 +75,70 @@ class LastfmService:
             data=encoded_params,
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
-        return response.json()         
+        return response.json()  
+               
+    
+    def _make_request(self, method: str, params: dict, session_key: str = None) -> dict:
+        """Base method for all API calls"""
+        params.update({
+            'method': method,
+            'api_key': self.api_key,
+            'format': 'json'
+        })
+        
+        if session_key:
+            params['sk'] = session_key
+        
+        params['api_sig'] = self._generate_api_sig(params)
+        
+        response = requests.post(
+            self.BASE_URL,
+            data=params,
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def get_weekly_report(self, username: str, session_key: str) -> dict:
+        """Lastfm: return weekly user statistics"""
+        return self._make_request(
+            'user.getWeeklyArtistChart',
+            {
+                'user': username,
+                'period': '1day'
+            },
+            session_key
+        )
+
+    def get_diary_report(self, username: str, session_key: str) -> dict:
+        """Lastfm: return diary user statistics"""
+        return self._make_request(
+            'user.getRecentTracks',
+            {
+                'user': username,
+                'period': '1day'
+            },
+            session_key
+        )    
+
+    # def get_top_tracks(self, username: str, session_key: str, period: str = '1day') -> dict:
+    #     """Lastfm: Get the most listened to songs from """
+    #     return self._make_request(
+    #         'user.getTopTracks',
+    #         {
+    #             'user': username,
+    #             'period': period
+    #         },
+    #         session_key
+    #     )
+
+    # def get_top_artists(self, username: str, session_key: str, period: str = '7day') -> dict:
+    #     """Lastfm: Gets most listened to artists"""        
+    #     return self._make_request(
+    #         'user.getTopArtists',
+    #         {
+    #             'user': username,
+    #             'period': period
+    #         },
+    #         session_key
+    #     )       
