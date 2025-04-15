@@ -24,9 +24,9 @@ class Container:
         self.spotify_service = SpotifyService()
         self.lastfm_service = LastfmService()
         self.sp_oauth_service = SPOAuthService(
-            auth_service=self.auth_service,
-            spotify_service=self.spotify_service,
-            spotify_repo=self.spotify_repository
+            # auth_service=self.auth_service,
+            # spotify_service=self.spotify_service,
+            # spotify_repo=self.spotify_repository
         )
         self.fm_oauth_service = FMOAuthService(
             auth_service=self.auth_service,

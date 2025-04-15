@@ -24,7 +24,7 @@ class SpotifyRepository:
             Updated SpotifyAccount entity
         """            
         account = self.get_by_user_id(account_data["user_id"])   
-        expires_at = datetime.utcnow() + timedelta(seconds=account_data["expires_in"])     
+        expires_at = datetime.utcnow() + timedelta(seconds=account_data["expires_in"])   
         if account:
             # Update existing
             account.access_token = account_data["access_token"]

@@ -6,6 +6,10 @@ class UserRepository:
     def __init__(self, db_session):
         self.db = db_session
 
+    def get_all_user(self):
+        """Finds user by id"""
+        return self.db.query(User).all()
+
     def get_by_id(self, id: int):
         """Finds user by id"""
         return self.db.query(User).filter(User.id == id).first()
