@@ -6,7 +6,7 @@ class SpotifyService:
     
     def get_user_info(self, access_token: str) -> dict:
         """
-        Get current user's profile info
+        Retrieve current user's profile info
         Arguments:
             code: User access token
         """
@@ -23,7 +23,7 @@ class SpotifyService:
 
     def get_recently_played(self, code: str, limit: int = 50):
         """
-        Gets recently played tracks
+        Retrieve recently played tracks
         Arguments:
             code: User access token
             limit: Maximum number of tracks to return (max 50)
@@ -60,7 +60,7 @@ class SpotifyService:
 
     def get_artist_info(self, artists_id, code: str,):
         """
-        Gets information about the required artists
+        Retrieve information about the required artists
         Args:
             code: User access token
             artists_id: List of the required artist IDs. Returns:

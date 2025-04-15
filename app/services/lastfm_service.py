@@ -104,20 +104,20 @@ class LastfmService:
 
     def get_diary_report(self, username: str, session_key: str) -> dict:
         """
-        Get diary user statistics
+        Retrieve user statistics for the entire day prior.
         Arguments:
             username (str):
             session_key (str):
         Returns:
             List of basic information about tracks:            
-            - id
-            - name
-            - artists
-            - artists_id
-            - album    
-            - image
-            - played_at
-            - duration_ms
+            - artist 
+            - streamable 
+            - image: 'sizes': ['small', 'medium', 'large', 'extralarge'] 
+            - mbid 
+            - album 
+            - name 
+            - url 
+            - date
         """
         date = datetime.now() - timedelta(days=1)
         
@@ -147,6 +147,5 @@ class LastfmService:
             page += 1
 
             time.sleep(0.2) # delay to avoid rate limiting
-
-        print(all_tracks[0])    
+                  
         return all_tracks    
