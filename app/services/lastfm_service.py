@@ -5,6 +5,9 @@ from urllib.parse import urlencode
 import hashlib
 import httpx
 from urllib.parse import quote_plus
+import time
+from datetime import datetime, timedelta
+import pandas as pd
 
 class LastfmService:
     BASE_URL = "https://ws.audioscrobbler.com/2.0/"
@@ -99,46 +102,51 @@ class LastfmService:
         response.raise_for_status()
         return response.json()
 
-    def get_weekly_report(self, username: str, session_key: str) -> dict:
-        """Lastfm: return weekly user statistics"""
-        return self._make_request(
-            'user.getWeeklyArtistChart',
-            {
-                'user': username,
-                'period': '1day'
-            },
-            session_key
-        )
-
     def get_diary_report(self, username: str, session_key: str) -> dict:
-        """Lastfm: return diary user statistics"""
-        return self._make_request(
-            'user.getRecentTracks',
-            {
-                'user': username,
-                'period': '1day'
-            },
-            session_key
-        )    
+        """
+        Get diary user statistics
+        Arguments:
+            username (str):
+            session_key (str):
+        Returns:
+            List of basic information about tracks:            
+            - id
+            - name
+            - artists
+            - artists_id
+            - album    
+            - image
+            - played_at
+            - duration_ms
+        """
+        date = datetime.now() - timedelta(days=1)
+        
+        # convert to Unix timestamp
+        start_date = int(time.mktime(date.replace(hour=0, minute=0, second=0).timetuple()))
+        end_date = int(time.mktime(date.replace(hour=23, minute=59, second=59).timetuple()))
 
-    # def get_top_tracks(self, username: str, session_key: str, period: str = '1day') -> dict:
-    #     """Lastfm: Get the most listened to songs from """
-    #     return self._make_request(
-    #         'user.getTopTracks',
-    #         {
-    #             'user': username,
-    #             'period': period
-    #         },
-    #         session_key
-    #     )
+        all_tracks = []
+        page = 1
+        total_pages = 1
+        while page <= total_pages:
+            
+            data = self._make_request(
+                'user.getRecentTracks',
+                {
+                    'user': username,
+                    'from': start_date,
+                    'to': end_date,
+                    'limit': 200,  # maximum allowed per request
+                    'page': page
+                },
+                session_key
+            )
+            
+            all_tracks.extend(data['recenttracks']['track'])
+            total_pages = int(data['recenttracks']['@attr']['totalPages'])
+            page += 1
 
-    # def get_top_artists(self, username: str, session_key: str, period: str = '7day') -> dict:
-    #     """Lastfm: Gets most listened to artists"""        
-    #     return self._make_request(
-    #         'user.getTopArtists',
-    #         {
-    #             'user': username,
-    #             'period': period
-    #         },
-    #         session_key
-    #     )       
+            time.sleep(0.2) # delay to avoid rate limiting
+
+        print(all_tracks[0])    
+        return all_tracks    
