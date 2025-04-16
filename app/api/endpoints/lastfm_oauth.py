@@ -6,6 +6,19 @@ oauth_bp = Blueprint('lastfm_oauth', __name__, url_prefix='/api/lastfm')
 @oauth_bp.route('/login')
 @token_required
 def lastfm_login(current_user):
+    """
+    This endpoint initiates the LastFM authentication flow by redirecting the user
+    to LastFM's authorization page, where they can grant permissions to the application.
+
+    Parameters:
+    -----------
+    current_user: User
+        The current user object (from token authentication).
+
+    Returns:
+    --------
+        JSON response containing the Spotify authorization URL.
+    """
     lastfm_service = current_app.container.lastfm_service
     callback_url = f"{request.host_url}api/lastfm/callback"
     auth_url = lastfm_service.get_oauth_url(callback_url)
@@ -14,7 +27,18 @@ def lastfm_login(current_user):
 @oauth_bp.route('/callback')
 @token_required
 def lastfm_callback(current_user):
-    """Handles the Last.fm callback"""
+    """
+    Handles the callback from LastFM after successful authentication and stores access/refresh tokens.
+        
+    Parameters:
+    -----------
+    current_user: User
+        The current user object (from token authentication).
+
+    Returns:
+    --------
+        JSON response confirming successful authentication with LastFM and returns access and refresh tokens.
+    """
     token = request.args.get('token')
     if not token:return jsonify({"error": "Token missing"}), 400
     
