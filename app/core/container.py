@@ -6,6 +6,7 @@ from app.services.lastfm_service import LastfmService
 from app.repositories.user_repository import UserRepository
 from app.repositories.spotify_repository import SpotifyRepository
 from app.repositories.lastfm_repository import LastfmRepository
+from app.repositories.daily_register_repository import DailyTracksPlayedRepository
 from app.core.database import db
 
 class Container:
@@ -18,6 +19,7 @@ class Container:
         self.user_repository = UserRepository(db.session)
         self.spotify_repository = SpotifyRepository(db.session)
         self.lastfm_rerpository = LastfmRepository(db.session)
+        self.daily_register_repository = DailyTracksPlayedRepository(db.session)
     
     def _init_services(self):
         self.auth_service = AuthService(self.user_repository)
