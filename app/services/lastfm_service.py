@@ -119,12 +119,11 @@ class LastfmService:
             - url 
             - date
         """
-        date = datetime.now() - timedelta(days=1)
-        
-        # convert to Unix timestamp
-        start_date = int(time.mktime(date.replace(hour=0, minute=0, second=0).timetuple()))
-        end_date = int(time.mktime(date.replace(hour=23, minute=59, second=59).timetuple()))
 
+        yesterday = datetime.now() - timedelta(days=1)
+        start_date = int(yesterday.replace(hour=0, minute=0, second=0).timestamp())
+        end_date = int(yesterday.replace(hour=23, minute=59, second=59).timestamp())
+        
         all_tracks = []
         page = 1
         total_pages = 1
@@ -137,15 +136,19 @@ class LastfmService:
                     'from': start_date,
                     'to': end_date,
                     'limit': 200,  # maximum allowed per request
-                    'page': page
+                    'page': page,                    
+                    "format": "json"
                 },
                 session_key
             )
             
-            all_tracks.extend(data['recenttracks']['track'])
+            # exclude tracks that are currently playing
+            tracks = [track for track in data['recenttracks']['track'] 
+                if not track.get('@attr', {}).get('nowplaying')]
+
+            all_tracks.extend(tracks)
             total_pages = int(data['recenttracks']['@attr']['totalPages'])
             page += 1
 
             time.sleep(0.2) # delay to avoid rate limiting
-                  
         return all_tracks    

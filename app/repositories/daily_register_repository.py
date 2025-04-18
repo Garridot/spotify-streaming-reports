@@ -5,12 +5,12 @@ class DailyTracksPlayedRepository:
     def __init__(self, db: Session):
         self.db = db        
 
-    def add_daily_register(self, user_id, tracks, artists, genres, date):
+    def add_daily_register(self, user_id, top_tracks, top_artists, top_genres, date):
         data = DailyTracksPlayed(
             user_id = user_id,
-            top_tracks = tracks,  
-            top_artists = artists,
-            top_genres = genres,
+            top_tracks = top_tracks,  
+            top_artists = top_artists,
+            top_genres = top_genres,
             date = date            
         )
         self.db.add(data)

@@ -73,15 +73,19 @@ class SpotifyService:
         
         sp = self.get_spotify_client(code)
         artists_res = []
-        for artist_id in artists_id:
-            artist_info = sp.artist(artist_id) 
 
-            artists_res.append({
-                'id': artist_info['id'],
-                'artist': artist_info['name'],
-                'genres': artist_info['genres'],   
-            }
-        )          
+        for artist_id in artists_id:
+            try:
+                artist_info = sp.artist(artist_id)                 
+                data = {
+                    'id': str(artist_info.get('id', '')),
+                    'artist': str(artist_info.get('name', '')),
+                    'genres': list(artist_info.get('genres', [])),   
+                }           
+                artists_res.append(data)
+            except Exception as e:
+                print(f"Error getting info for artist {artist_id}: {str(e)}")                
+                
         return artists_res
 
     
