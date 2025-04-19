@@ -21,3 +21,6 @@ class Config:
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     JWT_ALGORITHM: str = "HS256"
+
+    CLOUDAMQP_URL = os.getenv('CLOUDAMQP_URL')
+

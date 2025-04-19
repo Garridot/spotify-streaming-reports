@@ -1,10 +1,14 @@
-import logging
-from app.core.config import Config
-from app.workers.daily_task import sync_all_users_daily_register
-from app.core.database import init_db
-from app import create_app
+from app.workers.rabbitmq_worker import RabbitMQWorker
 
-if __name__ == '__main__':
-    app = create_app()
-    with app.app_context():       
-        sync_all_users_daily_register()
+
+if __name__ == '__main__':    
+    
+    worker = RabbitMQWorker()
+    try:
+        worker.connect()
+        worker.start_worker()
+    except KeyboardInterrupt:
+        worker.close()
+    except Exception as e:
+        logger.error(f"Worker error: {str(e)}")
+        worker.close()
