@@ -23,4 +23,4 @@ class Config:
     JWT_ALGORITHM: str = "HS256"
 
     CLOUDAMQP_URL = os.getenv('CLOUDAMQP_URL')
-
+    
