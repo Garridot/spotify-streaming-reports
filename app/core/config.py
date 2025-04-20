@@ -10,10 +10,6 @@ class Config:
     SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
     SPOTIFY_SCOPES = 'user-read-email user-read-private'
     
-    # Database
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///spotify.db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
     # Last.fm
     LASTFM_API_KEY = os.getenv('LASTFM_API_KEY')
     LASTFM_API_SECRET = os.getenv('LASTFM_API_SECRET')
@@ -23,4 +19,20 @@ class Config:
     JWT_ALGORITHM: str = "HS256"
 
     CLOUDAMQP_URL = os.getenv('CLOUDAMQP_URL')
-    
+
+class DevelopmentConfig(Config):
+    """Development configuration."""
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite:///spotify.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+class ProductionConfig(Config):
+    """Production configuration."""
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+
+config = {
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "default": DevelopmentConfig,
+}    

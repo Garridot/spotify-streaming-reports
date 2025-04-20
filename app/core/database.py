@@ -1,8 +1,32 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import OperationalError
+import logging
 
 db = SQLAlchemy()
 
 def init_db(app):
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+    """
+    Initializes the database with the given Flask app.
+    
+    Parameters:
+    -----------
+    app: Flask
+        The Flask application instance to bind the database.
+
+    Returns:
+    --------
+    None
+    """
+    try:
+        # Initialize the SQLAlchemy extension with the Flask application
+        db.init_app(app)
+
+        # Check the connection to the database on startup
+        with app.app_context():
+            engine = db.get_engine()
+            connection = engine.connect()
+            connection.close()
+            app.logger.info("Database connection successful.")
+    except OperationalError as e:
+        app.logger.error(f"Database connection failed: {e}")
+        raise RuntimeError("Failed to connect to the database. Check your configuration.") from e
