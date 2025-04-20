@@ -6,6 +6,7 @@ from app.models.schemas.spotify import TokenResponse
 from app.services.auth_service import AuthService
 from app.services.spotify_service import SpotifyService
 from app.repositories.spotify_repository import SpotifyRepository
+from app.repositories.user_repository import UserRepository
 from app.core.security import jwt_manager
 from app.core.database import db
 from datetime import datetime
@@ -19,8 +20,8 @@ class SPOAuthService:
             redirect_uri=Config.SPOTIFY_REDIRECT_URI,
             scope="user-read-email user-read-private user-top-read user-read-recently-played",  
         )  
-        self.auth_service = AuthService
-        self.spotify_service = SpotifyService
+        self.auth_service = AuthService(UserRepository(db.session))
+        self.spotify_service = SpotifyService()
         self.spotify_repo = SpotifyRepository(db.session)   
 
 
@@ -70,7 +71,7 @@ class SPOAuthService:
             dict: access and refresh tokens of the user
         """
         # 1. Get tokens from Spotify
-        tokens = self.sp_oauth.exchange_code_for_tokens(code)
+        tokens = self.exchange_code_for_tokens(code)
         
         # 2. Get user info
         user_info = self.spotify_service.get_user_info(tokens.access_token)
