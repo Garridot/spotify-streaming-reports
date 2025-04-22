@@ -29,5 +29,6 @@ jobs:
           LASTFM_API_KEY : ${{ secrets.LASTFM_API_KEY }}
           LASTFM_API_SECRET : ${{ secrets.LASTFM_API_SECRET }}
           FLASK_ENV: ${{ secrets.FLASK_ENV }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           python -c "from app.workers.task_dispatcher import dispatch_daily_task; dispatch_daily_task()"
