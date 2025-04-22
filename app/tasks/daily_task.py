@@ -24,17 +24,16 @@ def sync_all_users_daily_register():
             
             tracks = stats._get_user_top_tracks()
             artists = stats._get_user_top_artists()
-            genres = stats._get_user_top_genres()  
+            genres = stats._get_user_top_genres()             
 
-            print(tracks) 
+            daily_register_repository.add_or_update_daily_register(
+                user_id = user.id,
+                top_tracks = json.loads(tracks),  
+                top_artists = json.loads(artists),
+                top_genres = json.loads(genres),
+                date = date.date()
+            )  
 
-            # daily_register_repository.add_daily_register(
-            #     user_id = user.id,
-            #     top_tracks = json.loads(tracks),  
-            #     top_artists = json.loads(artists),
-            #     top_genres = json.loads(genres),
-            #     date = date.date()
-            # )  
             logging.info(f"Success in retrieving and saving the played tracks on {date.date()} by the user {user.id}")
         except Exception as e:
             logging.error(f"An error occurred while attempting to store tracks played on {date.date()} by user {user.id}: {str(e)}")  

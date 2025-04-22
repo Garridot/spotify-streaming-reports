@@ -24,9 +24,13 @@ def init_db(app):
         # Check the connection to the database on startup
         with app.app_context():
             engine = db.get_engine()
-            connection = engine.connect()
-            connection.close()
-            app.logger.info("Database connection successful.")
+            with engine.connect() as conn:
+                conn.execute(text("SELECT 1"))  # Query de prueba
+                app.logger.info("✅ Database connection successful")
+            # connection = engine.connect()
+                connection.close()
+            # app.logger.info("Database connection successful.")
+
     except OperationalError as e:
         app.logger.error(f"Database connection failed: {e}")
         raise RuntimeError("Failed to connect to the database. Check your configuration.") from e

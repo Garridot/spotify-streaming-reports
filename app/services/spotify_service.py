@@ -1,6 +1,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from app.core.config import Config
+import time
 
 class SpotifyService:
     
@@ -82,9 +83,11 @@ class SpotifyService:
                     'artist': str(artist_info.get('name', '')),
                     'genres': list(artist_info.get('genres', [])),   
                 }           
-                artists_res.append(data)
+                artists_res.append(data)                
             except Exception as e:
-                print(f"Error getting info for artist {artist_id}: {str(e)}")                
+                print(f"Error getting info for artist {artist_id}: {str(e)}")              
+
+            time.sleep(0.2) # delay to avoid rate limiting      
                 
         return artists_res
 

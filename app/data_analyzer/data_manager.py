@@ -197,7 +197,7 @@ def get_combined_history(lastfm_df, spotify_df):
     return combined_df[cols_order].sort_values('played_at')
 
 
-def get_top_tracks(combined_df, top_n=10):
+def get_top_tracks(combined_df, top_n):
     """
    Obtains the user's most-played tracks, considering:
         - Playback frequency (played_at count)
@@ -238,7 +238,7 @@ def get_top_tracks(combined_df, top_n=10):
         ascending=[False, False]
     )    
     
-    top_tracks = top_tracks.reset_index(drop=True).head(top_n)
+    top_tracks = top_tracks.reset_index(drop=True)
     
     # Convert duration from milliseconds to minutes for better readability
     top_tracks['total_duration_min'] = top_tracks['total_duration_ms'] / 60000
@@ -252,7 +252,7 @@ def get_top_tracks(combined_df, top_n=10):
     
     return top_tracks[result_cols]
 
-def get_top_artists(combined_df, top_n=10):
+def get_top_artists(combined_df, top_n):
     """
     Obtains the user's most-played artists, considering:
         - Playback frequency (played_at count)
@@ -272,6 +272,7 @@ def get_top_artists(combined_df, top_n=10):
     
     # Create a DataFrame to display the results
     top_tracks = pd.DataFrame({
+        'artist_name': grouped['artist_normalized'].first(),
         'artist_id': grouped['artist_id'].first(),
         'play_count': grouped['played_at'].count(),
     })   
@@ -287,7 +288,7 @@ def get_top_artists(combined_df, top_n=10):
         ascending=[False, False]
     )   
     
-    return top_tracks.sort_values('play_count', ascending=False).head(top_n)
+    return top_tracks.sort_values('play_count', ascending=False)
 
 def get_top_geners(data, top_n):    
     """
@@ -308,5 +309,5 @@ def get_top_geners(data, top_n):
     genre_counts = genres_exploded.value_counts().reset_index()
     genre_counts.columns = ['genres', 'play_count']
 
-    return genre_counts.head(top_n)
+    return genre_counts
 
