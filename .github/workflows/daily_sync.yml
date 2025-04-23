@@ -5,8 +5,23 @@ on:
     - cron: '5 0 * * *'                 # The daily execution takes place at 00:05 UTC
   workflow_dispatch:                    # Allows manual execution from the GitHub interface
 
-jobs:
-  daily-sync:                           # Define a job called "daily-sync" 
+jobs:  
+  dispatch_task:                        # Define a job called "dispatch_task"   
+    runs-on: ubuntu-latest              # Run on the latest available Ubuntu  
+    steps:                              # Steps that the job will execute in sequence 
+      - name: Checkout code             # Step 1: Checkout the code 
+        uses: actions/checkout@v2
+
+      - name: Set up Python             # Step 2: Configure Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'      
+
+      - name: Dispatch daily sync task  # Step 4: Run the script         
+        run: |
+          python -c "from app.workers.task_dispatcher import dispatch_daily_task; dispatch_daily_task()"        
+
+  process_tasks:                        # Define a job called "process_tasks" 
     runs-on: ubuntu-latest              # Run on the latest available Ubuntu
     steps:                              # Steps that the job will execute in sequence       
       - uses: actions/checkout@v2       # Step 1: Checkout the code
@@ -31,4 +46,4 @@ jobs:
           FLASK_ENV: ${{ secrets.FLASK_ENV }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          python -c "from app.workers.task_dispatcher import dispatch_daily_task; dispatch_daily_task()"
+          python run_worker.py
