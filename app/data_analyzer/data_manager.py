@@ -3,7 +3,7 @@ import numpy as np
 from datetime import datetime
 import re
 import unicodedata
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
 
 def normalize_text(text):
@@ -154,15 +154,21 @@ def combine_datasets(lastfm_df, spotify_df):
     Returns: 
         - dataframe that enhances the information collected from Spotify by including data obtained from LastFM.
     """
-    # Get the latest Spotify date 
-    cutoff_date = spotify_df.iloc[0]['played_at']
-
+    
+    # retrieve the previous day
     date = datetime.now().date() - timedelta(days=1)
+
+    start_date = datetime.combine(date, time(0, 0, 0)) 
+    end_date = datetime.combine(date, time(23, 59, 59)) 
+
     # filter the rows of the data frame that correspond to the previous day
-    spotify_df = spotify_df[spotify_df['played_at'].dt.date == date]
+    spotify_df = spotify_df[(spotify_df['played_at'] >= start_date) & (spotify_df['played_at'] <= end_date)]
+
+    # Get the latest Spotify date 
+    cutoff_date = spotify_df.iloc[-1]['played_at']     
     
     # Filter Last.fm by previous dates
-    lastfm_previous = lastfm_df[lastfm_df['played_at'] < cutoff_date].copy()
+    lastfm_previous = lastfm_df[lastfm_df['played_at'] < cutoff_date].copy()    
     
     # Combine the data
     combined = pd.concat([spotify_df, lastfm_previous], ignore_index=True)

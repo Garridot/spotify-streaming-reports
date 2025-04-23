@@ -6,24 +6,17 @@ class DailyTracksPlayedRepository:
         self.db = db        
 
     def add_or_update_daily_register(self, user_id, top_tracks, top_artists, top_genres, date):
-        daily_register = self.retrieve_day_register(user_id, date)
         
-        if daily_register:
-            daily_register.top_tracks = top_tracks,  
-            daily_register.top_artists = top_artists,
-            daily_register.top_genres = top_genres,
-        else:    
-            daily_register = DailyTracksPlayed(
-                user_id = user_id,
-                top_tracks = top_tracks,  
-                top_artists = top_artists,
-                top_genres = top_genres,
-                date = date            
-            )
+        daily_register = DailyTracksPlayed(
+            user_id = user_id,
+            top_tracks = top_tracks,  
+            top_artists = top_artists,
+            top_genres = top_genres,
+            date = date            
+        )
 
-            self.db.add(daily_register)
-        self.db.commit()
-        self.db.refresh(daily_register)  
+        self.db.add(daily_register)
+        self.db.commit()        
         return daily_register
 
     def retrieve_weekly_register(self, start_date, end_date):
