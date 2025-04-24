@@ -34,6 +34,6 @@ def sync_all_users_daily_register():
                 date = date.date()
             )  
 
-            logging.info(f"Success in retrieving and saving the played tracks on {date.date()} by the user {user.id}")
+            return logging.info(f"Success in retrieving and saving the played tracks on {date.date()} by the user {user.id}")
         except Exception as e:
             logging.error(f"An error occurred while attempting to store tracks played on {date.date()} by user {user.id}: {str(e)}")  

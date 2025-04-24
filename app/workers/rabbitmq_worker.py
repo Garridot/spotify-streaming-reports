@@ -49,6 +49,9 @@ class RabbitMQWorker:
             
             if message.get('task') == 'daily_sync':
                 sync_all_users_daily_register()
+            
+            # close the connection after processing is complete
+            self.close()    
                 
         except Exception as e:
             logger.error(f"Task failed: {str(e)}")
