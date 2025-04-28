@@ -59,12 +59,12 @@ class SpotifyService:
         return tracks            
            
 
-    def get_artist_info(self, artists_id, code: str,):
+    def get_artist_info(self, artists, code: str,):
         """
         Retrieve information about the required artists
         Args:
             code: User access token
-            artists_id: List of the required artist IDs. Returns:
+            artists_id: List of the required artist IDs.
         Returns:    
             List of basic information about artists:
             - id
@@ -73,11 +73,15 @@ class SpotifyService:
         """
         
         sp = self.get_spotify_client(code)
-        artists_res = []
+        artists_res = []        
 
-        for artist_id in artists_id:
+        for artist in artists:          
+            
             try:
-                artist_info = sp.artist(artist_id)                 
+                if artist["artist_id"] is not None:
+                    artist_info = sp.artist(artist["artist_id"]) 
+                else:
+                    sp.search(q='artist:' + artist["artist_name"], type='artist', limit=1)                    
                 data = {
                     'id': str(artist_info.get('id', '')),
                     'artist': str(artist_info.get('name', '')),

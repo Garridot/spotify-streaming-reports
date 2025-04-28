@@ -1,6 +1,5 @@
-from app.tasks.user_sync_service import CreateUserStats, LastfmSyncData
+from app.tasks.user_sync_service import CreateUserStats 
 from app.repositories.user_repository import UserRepository
-from app.repositories.daily_register_repository import DailyTracksPlayedRepository
 from flask import current_app
 from app.core.database import db
 from datetime import datetime, timedelta

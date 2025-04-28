@@ -6,6 +6,7 @@ from app.repositories.lastfm_repository import LastfmRepository
 from app.data_analyzer.data_manager import *
 from app.core.database import db
 import pandas as pd
+import json
 
 class SpotifySyncData():
     """
@@ -53,10 +54,10 @@ class SpotifySyncData():
         data_processed = load_and_preprocess_spotify(tracks)
         return data_processed
 
-    def _get_artists_played(self, artists_id): 
+    def _get_artists_played(self, artists): 
         """Retrieve the information about the artists played by the user from Spotify."""
         self._get_user_account_and_token()           
-        artists_info = self.sp_services.get_artist_info(artists_id, self.token_user)        
+        artists_info = self.sp_services.get_artist_info(artists, self.token_user)        
         return artists_info    
 
 
@@ -151,8 +152,8 @@ class CreateUserStats():
         """
         self._get_user_stats()
         top_artists = get_top_artists(self.user_stats, top_n=10)
-        artists_id = top_artists["artist_id"].to_list()
-        data = self.sp_sync_functions._get_artists_played(artists_id)    
+        artists = json.loads(top_artists[["artist_name","artist_id"]].to_json(orient="records"))
+        data = self.sp_sync_functions._get_artists_played(artists)    
         top_geners = get_top_geners(data, top_n=10)
         return top_geners.to_json(orient="records")
             

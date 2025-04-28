@@ -271,15 +271,15 @@ def get_top_artists(combined_df, top_n):
     Returns:
         pd.DataFrame: DataFrame with the most-played artists, sorted
     """
-    has_duration = 'duration_ms' in combined_df.columns
+    has_duration = 'duration_ms' in combined_df.columns    
     
     # Group by artist 
-    grouped = combined_df.groupby(['artist_name'])
+    grouped = combined_df.groupby(['artist_normalized'])
     
     # Create a DataFrame to display the results
     top_tracks = pd.DataFrame({
         'artist_name': grouped['artist_normalized'].first(),
-        'artist_id': grouped['artist_id'].first(),
+        'artist_id': grouped['artist_id'].last(),
         'play_count': grouped['played_at'].count(),
     })   
     
