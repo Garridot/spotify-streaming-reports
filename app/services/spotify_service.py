@@ -80,13 +80,21 @@ class SpotifyService:
             try:
                 if artist["artist_id"] is not None:
                     artist_info = sp.artist(artist["artist_id"]) 
+
+                    data = {
+                        'artist_id': str(artist_info.get('id', '')),
+                        'artist': str(artist_info.get('name', '')),
+                        'genres': list(artist_info.get('genres', [])),   
+                    }  
                 else:
-                    sp.search(q='artist:' + artist["artist_name"], type='artist', limit=1)                    
-                data = {
-                    'id': str(artist_info.get('id', '')),
-                    'artist': str(artist_info.get('name', '')),
-                    'genres': list(artist_info.get('genres', [])),   
-                }           
+                    artist_info = sp.search(q='artist:' + artist["artist_name"], type='artist', limit=1)                          
+
+                    data = {
+                        'artist_id': str(artist_info["artists"]["items"][0]['id']),
+                        'artist': str(artist_info["artists"]["items"][0]['name']),
+                        'genres': list(artist_info["artists"]["items"][0]['genres']),
+                    }            
+                         
                 artists_res.append(data)                
             except Exception as e:
                 print(f"Error getting info for artist: {str(e)}")              
