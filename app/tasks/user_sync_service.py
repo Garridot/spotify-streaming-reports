@@ -130,30 +130,22 @@ class CreateUserStats():
 
         return self.user_stats
 
-    def _get_user_top_tracks(self):
+    def _get_user_tracks(self):
         """
         Retrieve the top tracks played by the user for the day        
         """
         self._get_user_stats()
-        top_tracks = get_top_tracks(self.user_stats, top_n=10)      
-        return top_tracks.to_json(orient="records")
+        top_tracks = get_top_tracks(self.user_stats)     
 
-    def _get_user_top_artists(self):
-        """
-        Retrieve the top artists played by the user for the day        
-        """
-        self._get_user_stats()        
-        top_artists = get_top_artists(self.user_stats, top_n=10)         
-        return top_artists.to_json(orient="records")
+        top_artists = get_top_artists(self.user_stats)
+        artists = json.loads(top_artists[["artist_name","artist_id"]].to_json(orient="records"))        
+        artists_data = self.sp_sync_functions._get_artists_played(artists) 
 
-    def _get_user_top_genres(self):
-        """
-        Retrieve the top genres played by the user for the day        
-        """
-        self._get_user_stats()
-        top_artists = get_top_artists(self.user_stats, top_n=10)
-        artists = json.loads(top_artists[["artist_name","artist_id"]].to_json(orient="records"))
-        data = self.sp_sync_functions._get_artists_played(artists)    
-        top_geners = get_top_geners(data, top_n=10)
-        return top_geners.to_json(orient="records")
+        df_songs = top_tracks
+        df_artists = pd.DataFrame(artists_data)
+
+        df_artists = df_artists.rename(columns={'id': 'artist_id'})        
+        df_merged = pd.merge(df_songs, df_artists[['artist_id', 'genres']], on='artist_id', how='left')
+
+        return df_merged.to_json(orient="records")
             

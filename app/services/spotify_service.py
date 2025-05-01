@@ -89,7 +89,7 @@ class SpotifyService:
                 }           
                 artists_res.append(data)                
             except Exception as e:
-                print(f"Error getting info for artist {artist_id}: {str(e)}")              
+                print(f"Error getting info for artist: {str(e)}")              
 
             time.sleep(0.2) # delay to avoid rate limiting      
                 

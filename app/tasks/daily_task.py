@@ -19,17 +19,12 @@ def sync_all_users_daily_register():
 
     for user in users_repo:       
         try:
-            stats = CreateUserStats(user.id)  
+            stats = CreateUserStats(user.id) 
+            tracks = stats._get_user_tracks()  
             
-            tracks = stats._get_user_top_tracks()
-            artists = stats._get_user_top_artists()
-            genres = stats._get_user_top_genres()             
-
             daily_register_repository.add_or_update_daily_register(
                 user_id = user.id,
-                top_tracks = json.loads(tracks),  
-                top_artists = json.loads(artists),
-                top_genres = json.loads(genres),
+                top_tracks = json.loads(tracks),                  
                 date = date.date()
             )  
 

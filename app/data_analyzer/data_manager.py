@@ -203,15 +203,14 @@ def get_combined_history(lastfm_df, spotify_df):
     return combined_df[cols_order].sort_values('played_at')
 
 
-def get_top_tracks(combined_df, top_n):
+def get_top_tracks(combined_df):
     """
    Obtains the user's most-played tracks, considering:
         - Playback frequency (played_at count)
         - In case of a tie, total listening duration (sum of duration_ms)
 
     Args:
-        combined_df (pd.DataFrame): Combined DataFrame of Spotify and Last.fm
-        top_n (int): Number of top tracks to return
+        combined_df (pd.DataFrame): Combined DataFrame of Spotify and Last.fm        
 
     Returns:
         pd.DataFrame: DataFrame with the most-played tracks, sorted
@@ -258,15 +257,14 @@ def get_top_tracks(combined_df, top_n):
     
     return top_tracks[result_cols]
 
-def get_top_artists(combined_df, top_n):
+def get_top_artists(combined_df):
     """
     Obtains the user's most-played artists, considering:
         - Playback frequency (played_at count)
         - In case of a tie, total listening duration (sum of duration_ms)
 
     Args:
-        combined_df (pd.DataFrame): Combined DataFrame of Spotify and Last.fm
-        top_n (int): Number of top artists to return
+        combined_df (pd.DataFrame): Combined DataFrame of Spotify and Last.fm        
 
     Returns:
         pd.DataFrame: DataFrame with the most-played artists, sorted
@@ -296,24 +294,5 @@ def get_top_artists(combined_df, top_n):
     
     return top_tracks.sort_values('play_count', ascending=False)
 
-def get_top_geners(data, top_n):    
-    """
-    Obtains the user's most-played geners, considering:
-        - Playback frequency (played_at count)
 
-    Args:
-        data (JSON): Information in JSON format with the necessary data 
-        top_n (int): Number of top geners to return
-
-    Returns:
-        pd.DataFrame: DataFrame with the most-played geners, sorted
-    """    
-    df = pd.DataFrame(data)
-    # Explode the genre list so that each genre is in a separate row
-    genres_exploded = df['genres'].explode()
-    # Count the frequency of each gender
-    genre_counts = genres_exploded.value_counts().reset_index()
-    genre_counts.columns = ['genres', 'play_count']
-
-    return genre_counts
 
