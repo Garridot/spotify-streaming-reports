@@ -6,9 +6,7 @@ class DailyTracksPlayed(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    top_tracks = db.Column(db.JSON)  
-    top_artists = db.Column(db.JSON)
-    top_genres = db.Column(db.JSON)
+    top_tracks = db.Column(db.JSON)      
     date = db.Column(db.Date, nullable=False, index=True) 
     
     # Relationship
