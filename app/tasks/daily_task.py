@@ -24,7 +24,7 @@ def sync_all_users_daily_register():
             
             daily_register_repository.add_or_update_daily_register(
                 user_id = user.id,
-                top_tracks = json.loads(tracks),                  
+                tracks = json.loads(tracks),                  
                 date = date.date()
             )  
 

@@ -135,13 +135,13 @@ class CreateUserStats():
         Retrieve the top tracks played by the user for the day        
         """
         self._get_user_stats()
-        top_tracks = get_top_tracks(self.user_stats)     
+        tracks = get_top_tracks(self.user_stats)     
 
         top_artists = get_top_artists(self.user_stats)
         artists = json.loads(top_artists[["artist_name","artist_id"]].to_json(orient="records"))        
         artists_data = self.sp_sync_functions._get_artists_played(artists) 
 
-        df_songs = top_tracks
+        df_songs = tracks
         df_artists = pd.DataFrame(artists_data)
 
         df_artists = df_artists.rename(columns={'id': 'artist_id'})        

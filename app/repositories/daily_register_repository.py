@@ -5,11 +5,11 @@ class DailyTracksPlayedRepository:
     def __init__(self, db: Session):
         self.db = db        
 
-    def add_or_update_daily_register(self, user_id, top_tracks, top_artists, top_genres, date):
+    def add_or_update_daily_register(self, user_id, tracks, date):
         
         daily_register = DailyTracksPlayed(
             user_id = user_id,
-            top_tracks = top_tracks, 
+            tracks = tracks, 
             date = date            
         )
 
@@ -34,7 +34,7 @@ class DailyTracksPlayedRepository:
         ).first()
         
         if day_register:
-            day_register.top_tracks = tracks   
+            day_register.tracks = tracks   
 
         self.db.commit()
         self.db.refresh(day_register)    
