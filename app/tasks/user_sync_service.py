@@ -142,10 +142,27 @@ class CreateUserStats():
         artists_data = self.sp_sync_functions._get_artists_played(artists) 
 
         df_songs = tracks
-        df_artists = pd.DataFrame(artists_data)
+        df_artists = pd.DataFrame(artists_data)          
 
-        df_artists = df_artists.rename(columns={'id': 'artist_id'})        
-        df_merged = pd.merge(df_songs, df_artists[['artist_id', 'genres']], on='artist_id', how='left')
+        # Normalize artist names
+        df_songs['artist'] = df_songs['artist'].str.title()
+        df_artists['artist'] = df_artists['artist'].str.title()
 
-        return df_merged.to_json(orient="records")
+        # Perform a left merge
+        merged_df = pd.merge(
+            df_songs,
+            df_artists,
+            on='artist',
+            how='left',
+            suffixes=('', '_from_artists')
+        )
+
+        # Combine the artist id columns: prioritize the existing value in df songs, and if it's None, use the one in df_artists
+        merged_df['artist_id'] = merged_df['artist_id'].fillna(merged_df['artist_id_from_artists'])
+
+        # Delete the created temporary column
+        merged_df = merged_df.drop(columns=['artist_id_from_artists'])
+
+        return merged_df.to_json(orient="records")
+        
             
