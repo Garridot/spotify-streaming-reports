@@ -22,7 +22,7 @@ class DailyTracksPlayedRepository:
         day_register = self.db.query(DailyTracksPlayed).filter(
             (DailyTracksPlayed.user_id == user_id) |
             (DailyTracksPlayed.date == date)
-        ).first()    
+        ).first()     
 
         return day_register
 
