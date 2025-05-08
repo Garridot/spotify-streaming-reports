@@ -120,7 +120,7 @@ class LastfmService:
             - date
         """
 
-        yesterday = datetime.now() - timedelta(days=1)
+        yesterday = datetime.now() - timedelta(days=1)        
         start_date = int(yesterday.replace(hour=0, minute=0, second=0).timestamp())
         end_date = int(yesterday.replace(hour=23, minute=59, second=59).timestamp())
         

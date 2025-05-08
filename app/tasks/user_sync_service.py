@@ -163,6 +163,8 @@ class CreateUserStats():
         # Delete the created temporary column
         merged_df = merged_df.drop(columns=['artist_id_from_artists'])
 
+        merged_df['artist_image'] = merged_df['artist_image'].fillna(merged_df['image'])         
+
         return merged_df.to_json(orient="records")
         
             

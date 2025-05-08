@@ -79,19 +79,21 @@ class SpotifyService:
             
             try:
                 if artist["artist_id"] is not None:
-                    artist_info = sp.artist(artist["artist_id"]) 
-
+                    artist_info = sp.artist(artist["artist_id"])                     
+                    
                     data = {
                         'artist_id': str(artist_info.get('id', '')),
                         'artist': str(artist_info.get('name', '')),
+                        'artist_image': str(artist_info.get("images","")[0]["url"]),
                         'genres': list(artist_info.get('genres', [])),   
                     }  
                 else:
-                    artist_info = sp.search(q='artist:' + artist["artist_name"], type='artist', limit=1)                          
+                    artist_info = sp.search(q='artist:' + artist["artist_name"], type='artist', limit=1)                        
 
                     data = {
                         'artist_id': str(artist_info["artists"]["items"][0]['id']),
                         'artist': str(artist_info["artists"]["items"][0]['name']),
+                        'artist_image': str(artist_info["artists"]["items"][0]["images"][0]["url"]),
                         'genres': list(artist_info["artists"]["items"][0]['genres']),
                     }            
                          

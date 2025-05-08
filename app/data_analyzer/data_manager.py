@@ -104,7 +104,7 @@ def load_and_preprocess_lastfm(data):
     df['song_normalized'] = df['song_name'].apply(normalize_song_name)
     
     # Select and sort relevant columns
-    cols = ['artist_name', 'song_name', 'album', 'played_at',
+    cols = ['artist_name', 'song_name', 'album', 'played_at', 
             'image','artist_normalized', 'song_normalized']
     df = df[[col for col in cols if col in df.columns]]
     df['source'] = 'lastfm'
@@ -219,7 +219,7 @@ def get_top_tracks(combined_df):
     has_duration = 'duration_ms' in combined_df.columns
     
     # Group by artist and song (using normalized names for better matching)
-    grouped = combined_df.groupby(['artist_normalized', 'song_normalized'])
+    grouped = combined_df.groupby(['artist_normalized', 'song_normalized'])    
     
     # Create a DataFrame to display the results
     top_tracks = pd.DataFrame({
@@ -228,6 +228,7 @@ def get_top_tracks(combined_df):
         'song': grouped['song_name'].first(),
         'album': grouped['album'].first(),
         'play_count': grouped['played_at'].count(),
+        'played_at_times': grouped['played_at'].apply(list),
         'image': grouped['image'].first(),        
     })
     
@@ -250,7 +251,7 @@ def get_top_tracks(combined_df):
     top_tracks['total_duration_min'] = top_tracks['total_duration_min'].round(2)
     
     # Select and sort relevant columns
-    result_cols = ['artist', 'artist_id', 'song', 'album','play_count', 'total_duration_min', 'image']
+    result_cols = ['artist', 'artist_id', 'song', 'album','play_count', 'played_at_times', 'total_duration_min', 'image']
     
     if has_duration:
         result_cols.insert(3, 'total_duration_ms')
