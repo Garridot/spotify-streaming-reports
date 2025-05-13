@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Resumen Semanal</title>
+</head>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .wrapped__ { max-width: 70%; margin: auto; display: flex; flex-wrap: wrap; }
+  .wrapped-header { width: 100%;}
+  .wrapped-header h1 { text-align: center; font-size: 1.3rem;}
+  section.modal-content { width: 100%;}
+
+  div.top-item-modal.top-item-modal--artist { padding: 1rem 1rem 0;}
+  div.top-item-modal-image {  height: 250px; }  
+  div.top-item-modal-image-wrapper { height: 100%; width: 100%; background-size: cover; background-position: top;}
+  div.top-item-modal-image-wrapper img { width: 250px;}
+  div.top-item-modal-inner { margin: 10px 20px; font-size: 14px; line-height: 21px; }
+  div.top-item-modal-label { background: #c490ff; font-weight: 700; margin-top: -43px; padding: 5px 10px; position: absolute; }
+  h2.top-item-modal-header { font-size: 24px; line-height: 30px; margin-top: 24px;  }
+  ul.top-item-modal-data-row { display: flex; margin-top: 18px; padding: 0; }
+  ul.top-item-modal-data-row :first-child { margin-left: 0; }
+  li.top-item-modal-data-item { margin-left: 40px; list-style: none; text-align: center; }
+  div.top-item-modal-data-item-value { font-size: 24px; line-height: 30px; text-transform: uppercase; }    
+  hr { margin-bottom: 12px; margin-top: 27px; width: 100%; }
+
+  div.model-table { margin: 10px 20px; padding: 0 1rem 1rem;}
+  table.table.table-striped { width: 100%; }
+  thead { text-align: justify; font-size: smaller; font-weight: 700; }    
+  tr th:nth-child(3), tr td:nth-child(3) { text-align: end;}  
+
+  section.modal-content--tracks { width: 100%; padding: 1rem;}
+  section.modal-content--tracks div.model-table { margin: 2rem 0px; }
+  section.modal-content--tracks div.top-item-modal--tracks { display: flex; justify-content: space-between; position: relative; align-items: center; }
+  section.modal-content--tracks div.top-item-modal-inner { width: 100%; text-align: center; }
+  section.modal-content--tracks .top-item-modal-data-item-title { font-size: 20px; margin: 0 0 1rem; }
+  section.modal-content--tracks h2.top-item-modal-header { font-size: 25px; margin: 16px 0;}
+  section.modal-content--tracks h4 { margin: 0; font-size: 20px; }
+  section.modal-content--tracks div.top-item-modal-data-item-value { font-size: 30px; }  
+  section.modal-content--tracks div.top-item-modal-label { bottom: -15px; left: 15px; }
+  section.modal-content--tracks ul.top-item-modal-data-row { justify-content: center; }
+  section.modal-content--tracks img.cover-art { width: 30px;}
+  section.modal-content--tracks tr th:nth-child(3), 
+  section.modal-content--tracks tr td:nth-child(3) { text-align: start;}
+  section.modal-content--tracks tr th:nth-child(5), 
+  section.modal-content--tracks tr td:nth-child(5) { text-align: end;}
+
+  div.top-item-modal--artist div.top-item-modal-inner { display: flex; justify-content: space-between;}
+  div.top-item-modal--artist div.top-item-modal-label { margin-top: -30px; }
+
+  section.modal-content--genres { width: 100%; padding: 1rem; }
+  div.top-item-modal.top-item-modal--genres { width: 100%; margin: 2rem 0; }
+
+  div.modal-content-header h1 { font-size: 1.2rem; }
+  div.chart-data { display: flex; align-items: center; }  
+  span.span-label { width: 15%; }
+  span.span-bar { width: 85%; overflow: hidden;}
+  div.chart-bar { display: block; height: 1.8rem; background: #1a1b1e; margin: 2px 0; position: relative;}
+  div.chart-bar::before {content: " "; position: absolute; width: 250%; top: 0; left: 0; height: 1.8rem; background: #1a1b1e50;}
+
+  section.modal-content--genres div.model-table { margin: 1rem 0; padding: 0; }
+
+  @media(max-width:1000px){    
+    .wrapped__ {
+      max-width: 90%;
+    }
+    section.modal-content--tracks h2.top-item-modal-header {
+      font-size: 20px;
+    }
+  }
+
+  @media(max-width:800px){    
+    .wrapped__ { max-width: 90%; }
+    section.modal-content--tracks div.top-item-modal--tracks { display: block;}   
+    div.top-item-modal-image { height: 250px; text-align: center; }
+    section.modal-content--tracks div.top-item-modal-inner { margin: 10px 0; }
+    section.modal-content--tracks div.top-item-modal-label { left: 0; width: fit-content; position: relative; bottom: 0; margin: 0 auto 10px; }
+    section.modal-content--tracks h2.top-item-modal-header { font-size: 18px; margin: 0; }
+    section.modal-content--tracks h4 { font-size: 18px; }
+    section.modal-content--tracks .top-item-modal-data-item-title { font-size: 18px; margin: 0 0 .3rem; }
+    ul.top-item-modal-data-row { display: flex; margin-top: 10px; padding: 0; }
+    section.modal-content--tracks div.top-item-modal-data-item-value { font-size: 20px; }
+
+    section.modal-content--tracks div.model-table { margin: 0; padding: 0 0 1rem; }
+    div.model-table { margin: 10px 20px; padding: 0 1rem 1rem; }
+    section.modal-content--tracks tr th:nth-child(1),     
+    section.modal-content--tracks tr td:nth-child(1) {display: none;}
+
+    div.chart-data { display: flex; align-items: center; justify-content: space-between; }
+    span.span-bar { width: 75%; overflow: hidden; }
+
+    
+  }
+
+</style>
+<body style="background-color: #fafafa; color: #1a1b1e; font-family: Arial, sans-serif;">
+  <div class="wrapped__">
+    <div class="wrapped-header"><h1>🎧 Your Weekly Summary</h1></div>   
+    <hr> 
+    <section class="modal-content modal-content--tracks">
+      {% set top_track_listened = top_tracks["most_listened_by_total_duration:"][0] %}
+      <div class="top-item-modal top-item-modal--tracks">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper"> 
+            <img src="{{top_track_listened.image}}" alt="{{top_track_listened.album}}">           
+          </div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Track Listened</div>             
+          <h2 class="top-item-modal-header">{{top_track_listened.song}}</h2>   
+          <h4>{{top_track_listened.artist}}</h4>               
+          <ul class="top-item-modal-data-row">                                      
+            <li class="top-item-modal-data-item">
+                <div class="top-item-modal-data-item-title">Minutes Listened</div>
+                <div class="top-item-modal-data-item-value">{{ (top_track_listened.total_duration_ms / 60000)|round(2) }}</div>
+            </li>    
+            <li class="top-item-modal-data-item">
+              <div class="top-item-modal-data-item-title">Total Play Played</div>
+              <div class="top-item-modal-data-item-value">{{ top_track_listened.play_count }}</div>
+            </li>                      
+          </ul>         
+        </div>          
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th> </th>                  
+                  <th>#</th>  
+                  <th>Tracks</th>                  
+                  <th>Artists</th>                  
+                  <th>Minutes Listened</th>   
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_tracks["most_listened_by_total_duration:"][1:] %}
+            <tr>        
+                <td><img src="{{ track.image }}" class="cover-art" alt=""></td>         
+                <td>{{ loop.index + 1 }}</td>                       
+                <td>{{ track.song }}</td>         
+                <td>{{ track.artist }}</td>                                
+                <td>{{ (track.total_duration_ms / 60000)|round(2) }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+    <section class="modal-content modal-content--tracks">
+      {% set top_track_played = top_tracks["most_played_by_play_count:"][0] %}
+      <div class="top-item-modal top-item-modal--tracks">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper"> 
+            <img src="{{top_track_played.image}}" alt="{{top_track_played.album}}">           
+          </div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Track Played</div>   
+          <h2 class="top-item-modal-header">{{top_track_played.song}}</h2>              
+          <h4>{{top_track_played.artist}}</h4>   
+          <ul class="top-item-modal-data-row">       
+            <li class="top-item-modal-data-item">
+              <div class="top-item-modal-data-item-title">Total Play Played</div>
+              <div class="top-item-modal-data-item-value">{{ top_track_played.play_count }}</div>
+            </li>                                
+            <li class="top-item-modal-data-item">
+                <div class="top-item-modal-data-item-title">Minutes Listened</div>
+                <div class="top-item-modal-data-item-value">{{ (top_track_played.total_duration_ms / 60000)|round(2) }}</div>
+            </li>               
+          </ul>         
+        </div>        
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>   
+                  <th> </th>
+                  <th>#</th>  
+                  <th>Tracks</th>                  
+                  <th>Artists</th>                  
+                  <th>Minutes Listened</th>   
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_tracks["most_played_by_play_count:"][1:] %}
+            <tr>       
+                <td><img src="{{ track.image }}" class="cover-art" alt=""></td>            
+                <td>{{ loop.index + 1 }}</td>       
+                <td>{{ track.song }}</td>         
+                <td>{{ track.artist }}</td>                                
+                <td>{{ track.play_count }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+
+    <section class="modal-content">
+      {% set top_artist_listened = top_artists["most_listened_by_total_duration:"][0] %}
+      <div class="top-item-modal top-item-modal--artist">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper" style="background: url('{{top_artist_listened.artist_image}}') center center / cover; "></div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Artist Listened</div>   
+          <h2 class="top-item-modal-header">{{top_artist_listened.artist}}</h2>                 
+          <ul class="top-item-modal-data-row">                          
+            <li class="top-item-modal-data-item">
+                <div class="top-item-modal-data-item-title">Minutes Listened</div>
+                <div class="top-item-modal-data-item-value">{{ (top_artist_listened.total_duration_ms / 60000)|round(2) }}</div>
+            </li>            
+          </ul>          
+        </div>  
+        <hr>        
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>#</th>                  
+                  <th>Artists</th>
+                  <th>Minutes Listened</th>                  
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_artists["most_listened_by_total_duration:"][1:] %}
+            <tr>
+                <td>{{ loop.index + 1 }}</td>                
+                <td>{{ track.artist }}</td>
+                <td>{{ (track.total_duration_ms / 60000)|round(2) }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+    <section class="modal-content">
+      {% set top_artist_played = top_artists["most_played_by_play_count:"][0] %}
+      <div class="top-item-modal top-item-modal--artist">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper" style="background: url('{{top_artist_played.artist_image}}') center center / cover;"></div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Artist Played</div>   
+          <h2 class="top-item-modal-header">{{top_artist_played.artist}}<span></span></h2>                 
+          <ul class="top-item-modal-data-row">  
+            <li class="top-item-modal-data-item">
+              <div class="top-item-modal-data-item-title">Play Played</div>
+              <div class="top-item-modal-data-item-value">{{top_artist_played.play_count}}</div>
+            </li>
+          </ul>          
+        </div>   
+        <hr>       
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>#</th>                  
+                  <th>Artists</th>
+                  <th>Play Played</th>                  
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_artists["most_played_by_play_count:"][1:] %}
+            <tr>
+                <td>{{ loop.index + 1 }}</td>                
+                <td>{{ track.artist }}</td>
+                <td>{{ track.play_count }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+    <section class="modal-content modal-content--genres">
+      <div class="modal-content-header">
+        <h1>Top genres</h1>
+        <hr>
+      </div>
+      <div class="top-item-modal top-item-modal--genres">
+        {% set top_genres_listened = top_genres["most_listened_by_total_duration:"] %}          
+        {% set genres_data = [
+            { 
+              "genre":top_genres_listened[0]["genres"], 
+              "total_duration": top_genres_listened[0]["total_duration_ms"], 
+              "rate": 100
+            },
+            {
+              "genre": top_genres_listened[1]["genres"],
+              "total_duration": top_genres_listened[1]["total_duration_ms"],
+              "rate": ( (top_genres_listened[1]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            },
+            {
+              "genre": top_genres_listened[2]["genres"],
+              "total_duration": top_genres_listened[2]["total_duration_ms"],
+              "rate": ( (top_genres_listened[2]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            },
+            {
+              "genre": top_genres_listened[3]["genres"],
+              "total_duration": top_genres_listened[3]["total_duration_ms"],
+              "rate": ( (top_genres_listened[3]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            },
+            {
+              "genre": top_genres_listened[4]["genres"],
+              "total_duration": top_genres_listened[4]["total_duration_ms"],
+              "rate": ( (top_genres_listened[4]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            }
+          ]
+        %} 
+        <div class="top-item-modal-chart">          
+            {% for genre in genres_data %} 
+              <div class="chart-data">
+                <span class="span-label"><div class="chart-label">{{genre.genre}}</div></span>
+                <span class="span-bar"><div class="chart-bar" style="width: {{genre.rate}}%;"></div></span>
+              </div>
+            {% endfor %}
+        </div>
+        <div class="model-table">
+          <table class="table table-striped">
+            <thead>
+                <tr>                                     
+                    <th>#</th>  
+                    <th>Genres</th> 
+                    <th>Minutes Listened</th>   
+                </tr>
+            </thead>
+            <tbody>
+              {% for genre in genres_data %}
+              <tr>    
+                  <td>{{ loop.index }}</td>                       
+                  <td>{{ genre.genre }}</td>  
+                  <td>{{ (genre.total_duration / 60000)|round(2) }}</td>                
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div> 
+      </div> 
+    </section>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>    
+</script>
+</html>
