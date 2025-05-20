@@ -2,7 +2,7 @@ name: Daily Spotify Sync                # Workflow name
 
 on:
   schedule:
-    - cron: '5 0 * * *'                 # The daily execution takes place at 00:05 UTC
+    - cron: '5 * * * *'                 # The execution will occur at the fifth minute of every hour
   workflow_dispatch:                    # Allows manual execution from the GitHub interface
 
 jobs:  

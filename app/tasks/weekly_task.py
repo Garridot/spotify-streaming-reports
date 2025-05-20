@@ -16,13 +16,17 @@ logging.basicConfig(
 def manage_tracks_data(df):
     grouped = df.groupby(['song', 'artist']).agg({
             'total_duration_ms': 'sum',
-            'play_count': 'sum'
+            'play_count': 'sum',
+            'album': 'first',
+            'image': 'first',
         }).reset_index()    
     
     # Group by date and song, adding duration and play count
-    grouped_by_date = df.groupby(['date', 'song', 'artist']).agg({
+    grouped_by_date = df.groupby(['date', 'song', 'artist']).agg({        
         'total_duration_ms': 'sum',
-        'play_count': 'sum'
+        'play_count': 'sum',
+        'album': 'first',
+        'image': 'first',
     }).reset_index()
 
     # Find the most played songs by date (by play_count)
@@ -32,35 +36,34 @@ def manage_tracks_data(df):
     most_listened = grouped_by_date.loc[grouped_by_date.groupby('date')['total_duration_ms'].idxmax()]
 
     # Rename columns for clarity
-    most_played = most_played[['date', 'song', 'artist', 'play_count']].rename(
+    most_played = most_played[['date', 'song', 'artist', 'play_count', 'album', 'image']].rename(
         columns={'play_count': 'max_plays'})
-    most_listened = most_listened[['date', 'song', 'artist', 'total_duration_ms']].rename(
+    most_listened = most_listened[['date', 'song', 'artist', 'total_duration_ms', 'album', 'image']].rename(
         columns={'total_duration_ms': 'max_duration_ms'})
 
     # Convert duration to minutes for better reading
     most_listened['max_duration_min'] = most_listened['max_duration_ms'] / (1000 * 60)
     
-
     res = {}
-
-    res["most listened to tracks (by total_duration_ms) of the week:"] = json.loads(grouped.sort_values(["total_duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most played to tracks (by play_count) of the week:"] = json.loads(grouped.sort_values(["play_count"], ascending=[False]).head(5).to_json(orient="records"))
+    res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["total_duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_played_by_play_count:"] = json.loads(grouped.sort_values(["play_count"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_played_tracks_by_date:"] = json.loads(most_played.to_json(orient="records"))
+    res["most_listened_tracks_by_date:"] = json.loads(most_listened.to_json(orient="records"))
     
-    res["most played tracks by date:"] = json.loads(most_played.to_json(orient="records"))
-    res["most listened tracks by date:"] = json.loads(most_listened.to_json(orient="records"))
-
     return res
 
 def manage_artists_data(df):
     grouped = df.groupby(['artist']).agg({
             'total_duration_ms': 'sum',
-            'play_count': 'sum'
+            'play_count': 'sum',            
+            'artist_image': 'first',
         }).reset_index()   
     
     # Group by date and song, adding duration and play count
     grouped_by_date = df.groupby(['date', 'artist']).agg({
         'total_duration_ms': 'sum',
-        'play_count': 'sum'
+        'play_count': 'sum',       
+        'artist_image': 'first',
     }).reset_index()
 
     # Find the most played songs by date (by play_count)
@@ -70,21 +73,19 @@ def manage_artists_data(df):
     most_listened = grouped_by_date.loc[grouped_by_date.groupby('date')['total_duration_ms'].idxmax()]
 
     # Rename columns for clarity
-    most_played = most_played[['date', 'artist', 'play_count']].rename(
+    most_played = most_played[['date', 'artist', 'play_count', 'artist_image']].rename(
         columns={'play_count': 'max_plays'})
-    most_listened = most_listened[['date', 'artist', 'total_duration_ms']].rename(
+    most_listened = most_listened[['date', 'artist', 'total_duration_ms', 'artist_image']].rename(
         columns={'total_duration_ms': 'max_duration_ms'})
 
     # Convert duration to minutes for better reading
     most_listened['max_duration_min'] = most_listened['max_duration_ms'] / (1000 * 60)    
 
-    res = {}
-    
-    res["most listened to artists (by total_duration_ms) of the week:"] = json.loads(grouped.sort_values(["total_duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most played to artists (by play_count) of the week:"] = json.loads(grouped.sort_values(["play_count"], ascending=[False]).head(5).to_json(orient="records"))
-    
-    res["most played artists by date:"] = json.loads(most_played.to_json(orient="records"))
-    res["most listened artists by date:"] = json.loads(most_listened.to_json(orient="records"))
+    res = {}    
+    res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["total_duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_played_by_play_count:"] = json.loads(grouped.sort_values(["play_count"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_played_tracks_by_date:"] = json.loads(most_played.to_json(orient="records"))
+    res["most_listened_tracks_by_date:"] = json.loads(most_listened.to_json(orient="records"))
 
     return res
 
@@ -100,16 +101,28 @@ def manage_genres_data(df):
     # Most listened to genres by date (by total_duration_ms)
     most_listened_by_date = df_exploded.groupby(['date', 'genres'])['total_duration_ms'].sum().sort_values(ascending=False).reset_index()
 
-    
-    res = {}
-    
-    res["most listened to genres of the week:"] = json.loads(most_listened.head().to_json(orient="records"))
-    res["most played to genres of the week:"] = json.loads(most_played.head().to_json(orient="records"))
-
-    res["most listened to genres by date:"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
-    res["most played to genres by date:"] = json.loads(most_played_by_date.head().to_json(orient="records"))
+    res = {}    
+    res["most_listened_by_total_duration:"] = json.loads(most_listened.head().to_json(orient="records"))
+    res["most_played_by_play_count:"] = json.loads(most_played.head().to_json(orient="records"))
+    res["most_played_tracks_by_date:"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
+    res["most_listened_tracks_by_date:"] = json.loads(most_played_by_date.head().to_json(orient="records"))
 
     return res
+
+def manage_extra_data(df):
+   # Group by album, adding duration and play count
+    grouped_by_album = df.groupby(['album']).agg({
+        'total_duration_ms': 'sum',
+        'play_count': 'sum',  
+        'artist': 'first',     
+        'image': 'first',
+    }).reset_index()
+
+    res = {}
+    res["most_album_listened"] = json.loads(grouped_by_album.sort_values(["total_duration_ms"], ascending=[False]).head(1).to_json(orient="records"))
+    res["most_album_played"] = json.loads(grouped_by_album.sort_values(["play_count"], ascending=[False]).head(1).to_json(orient="records"))
+
+    return  res
 
 
 def sync_all_users_weekly_register():
@@ -117,11 +130,11 @@ def sync_all_users_weekly_register():
     users_repo = UserRepository(db.session).get_all_user()     
     weekly_register_repository = current_app.container.weekly_register_repository 
     last_day_of_week = datetime.now().date() - timedelta(days=1)
-    first_day_of_week = last_day_of_week - timedelta(days=6)      
+    first_day_of_week = last_day_of_week - timedelta(days=7)
 
     for user in users_repo:
         try:
-            retrieve_weekly_register = weekly_register_repository.retrieve_weekly_register(
+            retrieve_weekly_register = weekly_register_repository.retrieve_weekly_tracks_played(
                 user_id = user.id,
                 start_date = first_day_of_week,  
                 end_date = last_day_of_week,                
@@ -150,14 +163,15 @@ def sync_all_users_weekly_register():
                         "song": t["song"],
                         "total_duration_ms": t["total_duration_ms"],
                         "play_count": t["play_count"],
+                        "album": t["album"],
                         "image": t["image"],
+                        "artist_image": t["artist_image"],
                         "genres": t["genres"],
                         "date": date
                     }
                     tracks_list.append(d) 
 
             df = pd.DataFrame(tracks_list) 
-            
 
             weekly_register_repository.add_weekly_register(
                 user_id = user.id, 
@@ -165,79 +179,11 @@ def sync_all_users_weekly_register():
                 end_date = last_day_of_week, 
                 top_tracks = manage_tracks_data(df), 
                 top_artists = manage_artists_data(df), 
-                top_genres = manage_genres_data(df)
+                top_genres = manage_genres_data(df),
+                extra_data = manage_extra_data(df)
             )
 
             logging.info(f"Successfully retrieved and saved the played tracks from {first_day_of_week} to {last_day_of_week} by user {user.id}.")
         except Exception as e:
-            logging.error(f"An error occurred while attempting to store the played tracks from {first_day_of_week} to {last_day_of_week} by user {user.id}: {str(e)}")  
-
-    
-
-   
-    
-    # df_songs = tracks
-
-    # df_songs.drop('artist_name', axis=1, inplace=True)
-
-    # df_songs["artist_id"] = None
-    # df_songs = df_songs.rename(columns={'artist_normalized': 'artist_name'})             
-
-    # artists_info = df_songs.groupby(['artist_name']).agg({            
-    #     'artist_id': 'last'
-    # }).reset_index()
-
-    # artists = json.loads(artists_info[['artist_name',"artist_id"]].to_json(orient="records"))            
-
-    # artists_info = stats.sp_sync_functions._get_artists_played(artists)
-
-    # df_artists = pd.DataFrame(artists_info)            
-
-    # df_artists = df_artists.rename(columns={'artist': 'artist_name'})
-    # df_artists['artist_name'] = df_artists['artist_name'].str.lower()     
-                
-    # df_merged = pd.merge(df_songs, df_artists[["artist_name",'artist_id', 'genres']], on='artist_name', how='left')
-    
-    # df_merged = df_merged.rename(columns={'artist_name': 'artist'})
-    # df_merged = df_merged.rename(columns={'artist_id_y': 'artist_id'})
-    # df_merged = df_merged.rename(columns={'song_name': 'song'})
-
-    # df_merged.drop('artist_id_x', axis=1, inplace=True)
-    # df_merged.drop('song_normalized', axis=1, inplace=True)
-    # df_merged.drop('source', axis=1, inplace=True)       
-
-    # grouped = df_merged.groupby(["artist", 'song'])
-
-    # # Create a DataFrame to display the results
-    # top_tracks = pd.DataFrame({ 
-    #     "artist": grouped['artist'].first(),  
-    #     "song": grouped['song'].first(),               
-    #     'artist_id': grouped['artist_id'].last(),
-    #     "total_duration_ms": None,
-    #     "album": grouped["album"].last(),
-    #     'play_count': grouped['played_at'].count(),
-    #     "total_duration_min": None,
-    #     'image': grouped["image"].last(), 
-    #     'genres': grouped["genres"].last(),                
-    # })
-
-    # top_tracks['genres'] = top_tracks['genres'].apply(lambda x: x if isinstance(x, list) else []) 
-
-    # top_tracks = top_tracks.to_json(orient="records")
-
-    
-    # date = datetime.now() - timedelta(days=4)   
-    # daily_register_repository = current_app.container.daily_register_repository  
-
-    # daily_register_repository.add_or_update_daily_register(
-    #     user_id = 1,
-    #     tracks = json.loads(top_tracks),                  
-    #     date = date.date()
-    # )  
-
-    # res = daily_register_repository.retrieve_day_register(1)
-    # [print(r.date) for r in res]
-
-
-
-            
+            logging.error(f"An error occurred while attempting to store the played tracks from {first_day_of_week} to {last_day_of_week} by user {user.id}: {str(e)}")
+ 
