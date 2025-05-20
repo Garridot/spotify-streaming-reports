@@ -20,17 +20,17 @@ class DailyTracksPlayedRepository:
     def retrieve_day_register(self, user_id, date):
 
         day_register = self.db.query(DailyTracksPlayed).filter(
-            (DailyTracksPlayed.user_id == user_id) |
-            (DailyTracksPlayed.date == date)
+            DailyTracksPlayed.date == date,
+            DailyTracksPlayed.user_id == user_id            
         ).first()     
 
         return day_register
 
-    def update_day_register(self, user_id, tracks, date):
+    def update_daily_register(self, user_id, tracks, date):
 
-        day_register = self.db.query(DailyTracksPlayed).filter(
-            DailyTracksPlayed.user_id == user_id,
-            DailyTracksPlayed.date == date
+        day_register = self.db.query(DailyTracksPlayed).filter(            
+            DailyTracksPlayed.date == date,
+            DailyTracksPlayed.user_id == user_id
         ).first()
         
         if day_register:

@@ -2,6 +2,13 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from app.core.config import Config
 import time
+from datetime import datetime, timedelta, timezone
+import logging
+
+logging.basicConfig(     
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 class SpotifyService:
     
@@ -22,7 +29,7 @@ class SpotifyService:
         """
         return spotipy.Spotify(auth=access_token)
 
-    def get_recently_played(self, code: str, limit: int = 50):
+    def get_recently_played(self, code: str, after_timestamp = int):
         """
         Retrieve recently played tracks
         Arguments:
@@ -39,24 +46,33 @@ class SpotifyService:
             - played_at
             - duration_ms
         """
-        sp = self.get_spotify_client(code)
-        results = sp.current_user_recently_played(limit=limit)           
+
+        sp = self.get_spotify_client(code)        
+        results = sp.current_user_recently_played(limit=50, after=after_timestamp) 
         
         tracks = []        
         for item in results['items']:
-            track = item['track']             
+            try:
+                track = item['track'] 
 
-            tracks.append({
-                'id': track['id'],
-                'name': track['name'],
-                'artists': track['artists'][0]['name'],
-                'artists_id': track['artists'][0]['id'],
-                'album': track['album']['name'],                
-                'image': track['album']['images'][0]["url"],
-                'played_at': item['played_at'],
-                'duration_ms': track['duration_ms'],
-            }) 
-        return tracks            
+                tracks.append({
+                    'id': track['id'],
+                    'name': track['name'],
+                    'artists': track['artists'][0]['name'],
+                    'artists_id': track['artists'][0]['id'],
+                    'album': track['album']['name'],                
+                    'image': track['album']['images'][0]["url"],
+                    'played_at': item['played_at'],
+                    'duration_ms': track['duration_ms'],
+                    })  
+
+            except Exception as e: 
+                logging.info(f"Error getting tracks recently played: {str(e)}")   
+                return None   
+
+        return tracks
+        
+                  
            
 
     def get_artist_info(self, artists, code: str,):
@@ -73,7 +89,11 @@ class SpotifyService:
         """
         
         sp = self.get_spotify_client(code)
-        artists_res = []        
+        artists_res = []     
+
+        if len(artists) == 0: 
+            logging.info("Error getting info for artist: Not artists provided")
+            return {}  
 
         for artist in artists:          
             
@@ -99,7 +119,7 @@ class SpotifyService:
                          
                 artists_res.append(data)                
             except Exception as e:
-                print(f"Error getting info for artist: {str(e)}")              
+                logging.info(f"Error getting info for artist: {str(e)}")              
 
             time.sleep(0.2) # delay to avoid rate limiting      
                 

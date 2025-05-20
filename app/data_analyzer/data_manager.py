@@ -127,7 +127,7 @@ def load_and_preprocess_spotify(data):
         'artists': 'artist_name',
         'artists_id': 'artist_id'
     })
-    df['played_at'] = pd.to_datetime(df['played_at'], utc=True).dt.tz_localize(None)
+    df['played_at'] = pd.to_datetime(df['played_at'], utc=True)
     
     # Normalize title of artists and songs
     df['artist_name'] = df['artist_name'].str.replace(r'[\[\]\'\"]', '', regex=True)
@@ -138,7 +138,6 @@ def load_and_preprocess_spotify(data):
     cols = [ 'song_name', 'artist_name', 'artist_id', 'album', 'played_at',
             'duration_ms', 'artist_normalized', 'song_normalized', "image"]
     df = df[cols]
-    df['source'] = 'spotify'
     
     return df
 
