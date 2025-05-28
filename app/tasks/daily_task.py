@@ -24,7 +24,13 @@ def sync_all_users_daily_register():
 
     for user in users_repo:       
         
-        get_user_stats = CreateUserStats(user.id)                      
+        get_user_stats = CreateUserStats(user.id)    
+
+        date_limit= datetime.combine(date.date(), time(0, 0, 0, tzinfo=timezone.utc))                
+        after_timestamp = int(date_limit.timestamp() * 1000)       
+
+        # Request spotify and retrieve the tracks played by the user for the day                      
+        sp_res = get_user_stats._get_user_tracks(after_timestamp=after_timestamp)                    
 
         # Try to retrieve the daily register of today for the user
         daily_registered = daily_register_repository.retrieve_day_register(
@@ -116,9 +122,7 @@ def sync_all_users_daily_register():
                 artists_res = get_user_stats.sp_sync_functions._get_artists_played(not_recorded_artists)                     
 
                 # Convert artists_res (json) into a dataframe
-                artists_sp_res_df = pd.DataFrame(artists_res) 
-
-                print("artists_df:\n", artists_df)
+                artists_sp_res_df = pd.DataFrame(artists_res)                 
 
                 if artists_sp_res_df.empty:
                     # if artists_sp_res_df is empty, it means that all artists are recorded and it was not necessary to request from Spotify, 
@@ -164,3 +168,6 @@ def sync_all_users_daily_register():
                 return logging.info(f"Success in retrieving and saving the played tracks on {date.date()} {date.time().replace(microsecond=0)}:00 by the user {user.id}")
             except Exception as e:
                 logging.error(f"An error occurred while attempting to store tracks played on {date.date()} {date.time().replace(microsecond=0)}:00 by user {user.id}: {str(e)}") 
+
+    return logging.info(f"The task 'sync_all_users_daily_register' was completed on {date.date()} {date.time().replace(microsecond=0)}:00!")
+           
