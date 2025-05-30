@@ -24,6 +24,7 @@ class WeeklyUserSummary(db.Model):
     top_artists = db.Column(db.JSON)
     top_genres = db.Column(db.JSON)
     extra_data = db.Column(db.JSON)
+    report = db.Column(db.JSON)
 
     # Relationship
     user = db.relationship('User', backref=db.backref('weekly_stats', lazy='dynamic'))

@@ -69,8 +69,8 @@ def manage_artists_data(df):
     res = {}    
     res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
     res["most_played_by_play_count:"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most_played_tracks_by_date:"] = json.loads(most_played.to_json(orient="records"))
-    res["most_listened_tracks_by_date:"] = json.loads(most_listened.to_json(orient="records"))
+    res["most_played_artists_by_date:"] = json.loads(most_played.to_json(orient="records"))
+    res["most_listened_artists_by_date:"] = json.loads(most_listened.to_json(orient="records"))
 
     return res
 
@@ -89,8 +89,8 @@ def manage_genres_data(df):
     res = {}    
     res["most_listened_by_total_duration:"] = json.loads(most_listened.head().to_json(orient="records"))
     res["most_played_by_play_count:"] = json.loads(most_played.head().to_json(orient="records"))
-    res["most_played_tracks_by_date:"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
-    res["most_listened_tracks_by_date:"] = json.loads(most_played_by_date.head().to_json(orient="records"))
+    res["most_played_genres_by_date:"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
+    res["most_listened_genres_by_date:"] = json.loads(most_played_by_date.head().to_json(orient="records"))
 
     return res
 
@@ -156,3 +156,25 @@ def manage_extra_data(df, df2):
     res["top_day"] = json.loads(top_day_df.to_json(orient="records"))
 
     return  res
+
+
+def clean_data_custom(data):
+    default_fields_to_remove = {'album', 'image','duration_min','artist_image'}
+    
+    # Special rules: key → additional fields to delete
+    special_rules = {
+        'most_listened_by_total_duration:': {'played_at'},  
+        'most_played_by_play_count:': {'duration_ms'},     
+    }
+    
+    cleaned_data = {}
+    for category, tracks in data.items():
+        # Fields to remove = default fields + additional fields (if the key has a rule)
+        fields_to_remove = default_fields_to_remove | special_rules.get(category, set())
+        
+        cleaned_tracks = [
+            {k: v for k, v in track.items() if k not in fields_to_remove}
+            for track in tracks
+        ]
+        cleaned_data[category] = cleaned_tracks
+    return cleaned_data

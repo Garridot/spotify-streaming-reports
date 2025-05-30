@@ -15,7 +15,7 @@ class WeeklyTracksPlayedRepository:
         
         return weekly_register
 
-    def add_weekly_register(self, user_id, start_date, end_date, top_tracks, top_artists, top_genres, extra_data):
+    def add_weekly_register(self, user_id, start_date, end_date, top_tracks, top_artists, top_genres, extra_data, report):
         weekly_register = WeeklyUserSummary(
             user_id = user_id, 
             week_start_date = start_date, 
@@ -23,7 +23,8 @@ class WeeklyTracksPlayedRepository:
             top_tracks = top_tracks, 
             top_artists = top_artists, 
             top_genres = top_genres,
-            extra_data = extra_data
+            extra_data = extra_data,
+            report = report
             )   
         self.db.add(weekly_register)
         self.db.commit()
