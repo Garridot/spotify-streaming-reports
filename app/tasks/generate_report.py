@@ -31,7 +31,8 @@ def generate_deepseek_report(data):
     - 2 personalized recommendations (artists/albums).
     - Fun insight (e.g., "Your playlist is 90% nostalgic!").
     3. Use friendly, enthusiastic tone.
-    4. Return the response as valid JSON with this structure:
+    4. The values of durations are set in milliseconds; convert them in minutes or hours (choose which is the best option in each case) for a better understanding.
+    5. Return the response as valid JSON with this structure:
     {{
         "title": "text",
         "description": "text",
@@ -44,16 +45,12 @@ def generate_deepseek_report(data):
         }}
     }}
     
-    Important: You MUST return a valid JSON object, and ONLY the JSON object. Do not include any additional text or explanations.
+    Important: 
+    - Act as a music data analyst. Generate a  JSON, without any comments, pre-parsing, or additional text, for a weekly report for a Spotify user based on this data:   
     """
     completion = client.chat.completions.create(
         model="deepseek/deepseek-r1:free",  # Model in OpenRouter
-        messages=[
-            {
-                "role": "user",
-                "content": prompt  
-            }
-        ],
+        messages=[ {"role": "user", "content": prompt} ],
         response_format={ "type": "json_object" },  # Force response in JSON
         temperature=0.7  # Control creativity
     )

@@ -94,7 +94,7 @@ def manage_genres_data(df):
 
     return res
 
-def manage_extra_data(df, df2):
+def manage_extra_data(df, last_week):
    # Group by album, adding duration and play count
     grouped_by_album = df.groupby(['album']).agg({
         'duration_ms': 'sum',
@@ -127,16 +127,16 @@ def manage_extra_data(df, df2):
         "total_songs_played": int(len(df)),
         "total_unique_songs": int(df.drop_duplicates(subset=['song_name']).shape[0])
         }
-    total_tracks_last_week = df2.drop_duplicates(subset=['song_name']).shape[0]
+    total_tracks_last_week = int(last_week["tracks_played_this_week"]["total_unique_songs"])
 
     total_artist_this_week = df.drop_duplicates(subset=['artist_name']).shape[0]
-    total_artist_last_week = df2.drop_duplicates(subset=['artist_name']).shape[0]
+    total_artist_last_week = int(last_week["artists_played_this_week"])
 
     total_time_this_week = df['duration_ms'].sum()
-    total_time_last_week = df2['duration_ms'].sum()
+    total_time_last_week = int(last_week['time_listened_this_week'])
 
     tracks_variation = {
-        "total_track_variations" : f'{((total_tracks_this_week["total_songs_played"] - len(df2)) / len(df2)) * 100:.2f}%',
+        "total_track_variations" : f'{((total_tracks_this_week["total_songs_played"] - int(last_week["tracks_played_this_week"]["total_songs_played"])) / int(last_week["tracks_played_this_week"]["total_songs_played"])) * 100:.2f}%',
         "unique_track_variations": f'{((total_tracks_this_week["total_unique_songs"] - total_tracks_last_week) / total_tracks_last_week) * 100:.2f}%',
     }
     artists_variation = f'{((total_artist_this_week - total_artist_last_week) / total_artist_last_week) * 100:.2f}%'
