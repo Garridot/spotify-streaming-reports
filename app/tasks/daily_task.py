@@ -27,17 +27,14 @@ def sync_all_users_daily_register():
         get_user_stats = CreateUserStats(user.id)    
 
         date_limit= datetime.combine(date.date(), time(0, 0, 0, tzinfo=timezone.utc))                
-        after_timestamp = int(date_limit.timestamp() * 1000)       
-
-        # Request spotify and retrieve the tracks played by the user for the day                      
-        sp_res = get_user_stats._get_user_tracks(after_timestamp=after_timestamp)                    
+        after_timestamp = int(date_limit.timestamp() * 1000)    
 
         # Try to retrieve the daily register of today for the user
         daily_registered = daily_register_repository.retrieve_day_register(
             user_id = user.id,                
             date = date.date()
-        )              
-
+        ) 
+        
         if daily_registered is None:
             # If daily_registered is None, it retrieves and creates the daily register for the user
             try:
@@ -64,10 +61,10 @@ def sync_all_users_daily_register():
             # If daily_registered exists, it retrieves the tracks not recorded and updates the daily register for the user
 
             # Get the date of the last stored "played_at" to determine when to request data from Spotify
-            after_timestamp = int(daily_registered.tracks[0]["played_at"]) 
+            after_timestamp = int(daily_registered.tracks[0]["played_at"])             
 
             # Request spotify and retrieve the tracks played by the user for the day
-            sp_res = get_user_stats._get_user_tracks(after_timestamp=after_timestamp) 
+            sp_res = get_user_stats._get_user_tracks(after_timestamp=after_timestamp)             
 
             if sp_res is None: 
                 # If sp_res is None, it means that the user has not played any tracks for the time requested
@@ -158,7 +155,7 @@ def sync_all_users_daily_register():
                 
                 combined_tracks = pd.concat([new_tracks_played_data_df, pd.DataFrame(tracks_recorded)], ignore_index=True)
                 combined_tracks = combined_tracks.drop(columns=["artist_image_from_artists","genres_from_artists"])
-
+                
                 daily_register_repository.update_daily_register(
                     user_id = user.id,
                     tracks = json.loads(combined_tracks.to_json(orient="records")),                  
