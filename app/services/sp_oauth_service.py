@@ -83,6 +83,7 @@ class SPOAuthService:
         self.spotify_repo.create_or_update({
             "user_id": user.id,
             "spotify_user_id": user_info['id'],
+            "spotify_username": user_info['display_name'],
             "access_token": tokens.access_token,
             "refresh_token": tokens.refresh_token,
             "expires_in": tokens.expires_in

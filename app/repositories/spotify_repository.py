@@ -26,7 +26,8 @@ class SpotifyRepository:
         account = self.get_by_user_id(account_data["user_id"])   
         expires_at = datetime.utcnow() + timedelta(seconds=account_data["expires_in"])   
         if account:
-            # Update existing
+            # Update existing            
+            account.spotify_username=account_data["spotify_username"],
             account.access_token = account_data["access_token"]
             account.refresh_token = account_data["refresh_token"]
             account.token_expires_at = expires_at
@@ -35,6 +36,7 @@ class SpotifyRepository:
             account = SpotifyAccount(
                 user_id=account_data["user_id"],
                 spotify_user_id=account_data["spotify_user_id"],
+                spotify_username=account_data["spotify_username"],
                 access_token=account_data["access_token"],
                 refresh_token=account_data["refresh_token"],
                 token_expires_at=expires_at
