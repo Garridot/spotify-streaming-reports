@@ -48,12 +48,12 @@ class SPOAuthService:
         Returns:
             dict: new access token:               
         """
-        data = self.sp_oauth.refresh_access_token(refresh_token)    
+        data = self.sp_oauth.refresh_access_token(refresh_token) 
         
         self.spotify_repo.create_or_update({
             "user_id": user_id,            
             "access_token": data["access_token"],
-            "refresh_token": data["refresh_token"],
+            "refresh_token": data["refresh_token"],            
             "expires_in": data["expires_in"]
         })   
         return data["access_token"]
@@ -105,6 +105,7 @@ class SPOAuthService:
         Check if the Spotify access token of the user has expired
         Arguments:
             user_id (int)
-        """
-        user = self.spotify_repo.get_by_user_id(user_id)      
-        return datetime.utcnow() >= user.token_expires_at    
+        """        
+        user = self.auth_service.get_user_by_id(user_id)        
+        spotify_user = self.spotify_repo.get_by_user_id(user.id)             
+        return datetime.utcnow() >= spotify_user.token_expires_at    

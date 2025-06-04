@@ -6,7 +6,7 @@ class AuthService:
         self.user_repo = user_repository 
 
     def get_user_by_id(self,id):
-        user = self.get_user_by_id(id)
+        user = self.user_repo.get_by_id(id)
         return user
         
     def create_or_update_user(self, email):
