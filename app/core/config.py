@@ -22,6 +22,13 @@ class Config:
 
     DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
 
+    # Flask-Mail (Gmail SMTP)
+    MAIL_SERVER = os.getenv('MAIL_SERVER')
+    MAIL_PORT = os.getenv('MAIL_PORT')
+    MAIL_USE_TLS = os.getenv('MAIL_USE_TLS')
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+
 class DevelopmentConfig(Config):
     """Development configuration."""
     DEBUG = True

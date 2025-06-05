@@ -12,6 +12,12 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 
+    template_path = os.path.join(os.path.dirname(__file__), 'templates')
+    
+    app = Flask(__name__,
+               template_folder=template_path,
+               static_folder='static')           
+
     config_name = os.getenv("FLASK_ENV")
 
     app.config.from_object(config[config_name])    
@@ -24,6 +30,6 @@ def create_app():
     jwt_manager.init_app(app)   
 
     app.container = Container(app)
-    register_blueprints(app)
+    register_blueprints(app)        
     
     return app

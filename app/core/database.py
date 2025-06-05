@@ -25,11 +25,9 @@ def init_db(app):
         with app.app_context():
             engine = db.get_engine()
             with engine.connect() as conn:
-                conn.execute(text("SELECT 1"))  # Query de prueba
+                conn.execute(text("SELECT 1"))  # Test query 
                 app.logger.info("✅ Database connection successful")
-            # connection = engine.connect()
                 connection.close()
-            # app.logger.info("Database connection successful.")
 
     except OperationalError as e:
         app.logger.error(f"Database connection failed: {e}")
