@@ -1,0 +1,94 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif; 
+    background: black;
+}
+
+
+.main_background {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    background: url(https://i.etsystatic.com/32519156/r/il/2123e4/4587886470/il_fullxfull.4587886470_4gz6.jpg);
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+    filter: brightness(0.4) blur(4px);
+}
+
+
+main {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main_content {
+    width: 50%;
+    height: 70%;
+    background: #111112;
+    text-align: center;
+    padding: 2rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_link_buttom {
+    margin: 2rem 0;
+}
+
+.form_link_buttom button{
+    width: 70%;
+    display: block;
+    margin: auto;
+    padding: .8rem 0.5rem;
+    background: #1db954;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+    transition: all .1s;
+    font-family: 'Montserrat', sans-serif; 
+    font-size: 1rem;    
+}
+
+.form_link_buttom button:hover {
+    background: #4ce481;
+}
+
+
+p {
+    line-height: 2;
+    font-size: large;
+    font-weight: 600;
+}
+
+
+@media(max-width:1000px) {
+    .main_content {
+        width: 70%;
+        height: 70%;
+    }
+}
+
+@media(max-width:800px) {
+    .main_content {
+        width: 80%;
+        height: 80%;
+    }
+}
+
+@media(max-width:700px) {
+    .main_content {
+        width: 100%;
+        height: 100%;
+    }
+}

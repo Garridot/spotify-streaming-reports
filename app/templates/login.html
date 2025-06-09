@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <div class="main_background"></div>
+    <main>        
+        <div class="main_content">
+            <div class="main_wrapped">
+                <div class="main_title">                
+                    <p>Welcome!</p>
+                    <p>Obtain your weekly report from Spotify for free</p>
+                </div> 
+                <span style="color: #aaa; padding: 1rem 0px 0; display: block;"> Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo quasi non illum reiciendis repudiandae.</span>
+                <div class="main_form">   
+                    <div class="form_link_buttom">
+                        <span><button type="button">Log in with Spotify</button></span> 
+                    </div>
+                    <span style="color:#aaa;">New to Spotify?</span>  
+                    <span><a href="https://accounts.spotify.com/#"  style="color: white;">Sign up in Spotify</a></span>           
+                </div>
+            </div>
+        </div>
+    </main>    
+</body>
+<script type="module" src="{{ url_for('static', filename='js/login.js') }}" ></script>
+</html>
