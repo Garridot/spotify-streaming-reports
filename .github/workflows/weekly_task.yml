@@ -58,4 +58,4 @@ jobs:
           MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }} 
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }} 
         run: |
-          python -c "app.tasks.sent_email import email_task; email_task()"      
+          python run_email_sending_worker.py

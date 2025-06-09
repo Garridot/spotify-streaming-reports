@@ -1,11 +1,11 @@
 from app.repositories.user_repository import UserRepository
-from app.core.config import Config
 from flask import current_app
 from app.core.database import db
 from datetime import datetime, timedelta
 from flask import render_template
 from flask_mail import Mail, Message
 import logging
+import re
 
 
 logging.basicConfig(
@@ -13,14 +13,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-# Flask-Mail (Gmail SMTP)
-app.config['MAIL_SERVER'] = Config.MAIL_SERVER
-app.config['MAIL_PORT'] = Config.MAIL_PORT
-app.config['MAIL_USE_TLS'] = Config.MAIL_USE_TLS 
-app.config['MAIL_USERNAME'] = Config.MAIL_USERNAME 
-app.config['MAIL_PASSWORD'] = Config.MAIL_PASSWORD  
-
-mail = Mail(app)
 
 def highlight_text(text):
     text_format = re.sub(
@@ -37,12 +29,12 @@ def highlight_text(text):
     return text_format     
 
 
-def email_task():
+def email_task(mail):
 
     last_day_of_week = datetime.now().date() - timedelta(days=1)
     first_day_of_week = last_day_of_week - timedelta(days=6)   
 
-    weekly_register_repository = app.container.weekly_register_repository
+    weekly_register_repository = current_app.container.weekly_register_repository
 
     users_repo = UserRepository(db.session).get_all_user() 
     for user in users_repo:  
