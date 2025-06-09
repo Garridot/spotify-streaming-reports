@@ -127,33 +127,38 @@ def manage_extra_data(df, last_week):
         "total_songs_played": int(len(df)),
         "total_unique_songs": int(df.drop_duplicates(subset=['song_name']).shape[0])
         }
-    total_tracks_last_week = int(last_week["tracks_played_this_week"]["total_unique_songs"])
 
-    total_artist_this_week = df.drop_duplicates(subset=['artist_name']).shape[0]
-    total_artist_last_week = int(last_week["artists_played_this_week"])
-
-    total_time_this_week = df['duration_ms'].sum()
-    total_time_last_week = int(last_week['time_listened_this_week'])
-
-    tracks_variation = {
-        "total_track_variations" : f'{((total_tracks_this_week["total_songs_played"] - int(last_week["tracks_played_this_week"]["total_songs_played"])) / int(last_week["tracks_played_this_week"]["total_songs_played"])) * 100:.2f}%',
-        "unique_track_variations": f'{((total_tracks_this_week["total_unique_songs"] - total_tracks_last_week) / total_tracks_last_week) * 100:.2f}%',
-    }
-    artists_variation = f'{((total_artist_this_week - total_artist_last_week) / total_artist_last_week) * 100:.2f}%'
-    time_variation = f'{((total_time_this_week - total_time_last_week) / total_time_last_week) * 100:.2f}%'
+    total_artist_this_week = df.drop_duplicates(subset=['artist_name']).shape[0]  
+    total_time_this_week = df['duration_ms'].sum()   
   
 
     res = {}
     res["tracks_played_this_week"]= total_tracks_this_week
     res["artists_played_this_week"]= int(total_artist_this_week)
-    res["time_listened_this_week"]= int(total_time_this_week)
-    res["weekly_variation_tracks"] = tracks_variation
-    res["weekly_variation_artists"] = artists_variation
-    res["weekly_variation_time"] = time_variation
+    res["time_listened_this_week"]= int(total_time_this_week) 
     res["most_album_listened"] = json.loads(grouped_by_album.sort_values(["duration_ms"], ascending=[False]).head(1).to_json(orient="records"))
     res["most_album_played"] = json.loads(grouped_by_album.sort_values(["played_at"], ascending=[False]).head(1).to_json(orient="records"))
     res["top_hours"] = json.loads(top_hours_df.to_json(orient="records"))
     res["top_day"] = json.loads(top_day_df.to_json(orient="records"))
+
+    
+    if last_week:
+    
+        total_tracks_last_week = int(last_week["tracks_played_this_week"]["total_unique_songs"])
+        total_artist_last_week = int(last_week["artists_played_this_week"])    
+        total_time_last_week = int(last_week['time_listened_this_week'])
+
+        tracks_variation = {
+            "total_track_variations" : f'{((total_tracks_this_week["total_songs_played"] - int(last_week["tracks_played_this_week"]["total_songs_played"])) / int(last_week["tracks_played_this_week"]["total_songs_played"])) * 100:.2f}%',
+            "unique_track_variations": f'{((total_tracks_this_week["total_unique_songs"] - total_tracks_last_week) / total_tracks_last_week) * 100:.2f}%',
+        }
+        artists_variation = f'{((total_artist_this_week - total_artist_last_week) / total_artist_last_week) * 100:.2f}%'
+        time_variation = f'{((total_time_this_week - total_time_last_week) / total_time_last_week) * 100:.2f}%'
+
+
+        res["weekly_variation_tracks"] = tracks_variation
+        res["weekly_variation_artists"] = artists_variation
+        res["weekly_variation_time"] = time_variation
 
     return  res
 

@@ -40,5 +40,19 @@ class DailyTracksPlayedRepository:
         self.db.refresh(day_register)    
 
         return day_register   
+
+    def delete_daily_register(self, user_id, date):
+       
+        day_register = self.db.query(DailyTracksPlayed).filter(
+            DailyTracksPlayed.date == date,
+            DailyTracksPlayed.user_id == user_id
+        ).first()
+        
+        if day_register:
+            self.db.delete(day_register)
+            self.db.commit()
+            return True 
+        else:
+            return False       
         
         

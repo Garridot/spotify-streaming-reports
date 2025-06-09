@@ -19,6 +19,7 @@ def sync_all_users_weekly_register():
     """Task to synchronize the retrieval and storage of all user stats"""    
     users_repo = UserRepository(db.session).get_all_user()     
     weekly_register_repository = current_app.container.weekly_register_repository 
+    daily_register_repository = current_app.container.daily_register_repository 
     last_day_of_week = datetime.utcnow().date() - timedelta(days=1)
     first_day_of_week = last_day_of_week - timedelta(days=6)      
 
@@ -28,7 +29,7 @@ def sync_all_users_weekly_register():
                 user_id = user.id,
                 start_date = first_day_of_week,  
                 end_date = last_day_of_week,                
-            ) 
+            )            
 
             r_list = []      
 
@@ -74,9 +75,12 @@ def sync_all_users_weekly_register():
                 user_id = user.id,
                 start_date = first_day_of_last_week,  
                 end_date = last_day_of_last_week,                
-            )         
+            ) 
 
-            last_week = retrieve_last_week_register.extra_data  
+            if retrieve_last_week_register: 
+                last_week = retrieve_last_week_register.extra_data  
+            else:
+                last_week = None    
 
             extra_data = manage_extra_data(df, last_week)             
 
@@ -99,6 +103,13 @@ def sync_all_users_weekly_register():
                 extra_data = extra_data,
                 report = json.loads(report)
             )
+
+            for register in retrieve_weekly_register:
+                                
+                daily_register_repository.delete_daily_register(
+                    user_id = user.id,
+                    date = register.date, 
+                ) 
 
 
             logging.info(f"Successfully retrieved and saved the played tracks from {first_day_of_week} to {last_day_of_week} by user {user.id}.")
