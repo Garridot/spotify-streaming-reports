@@ -7,55 +7,55 @@ on:
 
 jobs:  
     process_weekly_report_task:         # Define a job called "weekly_report" 
-    runs-on: ubuntu-latest              # Run on the latest available Ubuntu
-    steps:                              # Steps that the job will execute in sequence       
-      - uses: actions/checkout@v2       # Step 1: Checkout the code
-      
-      - name: Set up Python             # Step 2: Configure Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-          
-      - name: Install dependencies      # Step 3: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt          
-          
-      - name: Run Weekly Report Task    # Step 4: Run the script   
-        env:
-          CLOUDAMQP_URL: ${{ secrets.CLOUDAMQP_URL }}  
-          FLASK_ENV: ${{ secrets.FLASK_ENV }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-           
-        run: |
-          python run_weekly_worker.py
+      runs-on: ubuntu-latest              # Run on the latest available Ubuntu
+      steps:                              # Steps that the job will execute in sequence       
+        - uses: actions/checkout@v2       # Step 1: Checkout the code
+        
+        - name: Set up Python             # Step 2: Configure Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.8'
+            
+        - name: Install dependencies      # Step 3: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt          
+            
+        - name: Run Weekly Report Task    # Step 4: Run the script   
+          env:
+            CLOUDAMQP_URL: ${{ secrets.CLOUDAMQP_URL }}  
+            FLASK_ENV: ${{ secrets.FLASK_ENV }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+            
+          run: |
+            python run_weekly_worker.py
 
     process_email_sending_task:         # Define a job called "weekly_report" 
-    runs-on: ubuntu-latest              # Run on the latest available Ubuntu
-    steps:                              # Steps that the job will execute in sequence       
-      - uses: actions/checkout@v2       # Step 1: Checkout the code
-      
-      - name: Set up Python             # Step 2: Configure Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
-          
-      - name: Install dependencies      # Step 3: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt          
-          
-      - name: Run Email Sending Task    # Step 4: Run the script   
-        env:
-          CLOUDAMQP_URL: ${{ secrets.CLOUDAMQP_URL }}  
-          FLASK_ENV: ${{ secrets.FLASK_ENV }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
-          MAIL_PORT: ${{ secrets.MAIL_PORT }}
-          MAIL_USE_TLS: ${{ secrets.MAIL_USE_TLS }} 
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }} 
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }} 
-        run: |
-          python run_email_sending_worker.py
+      runs-on: ubuntu-latest              # Run on the latest available Ubuntu
+      steps:                              # Steps that the job will execute in sequence       
+        - uses: actions/checkout@v2       # Step 1: Checkout the code
+        
+        - name: Set up Python             # Step 2: Configure Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.8'
+            
+        - name: Install dependencies      # Step 3: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt          
+            
+        - name: Run Email Sending Task    # Step 4: Run the script   
+          env:
+            CLOUDAMQP_URL: ${{ secrets.CLOUDAMQP_URL }}  
+            FLASK_ENV: ${{ secrets.FLASK_ENV }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+            MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
+            MAIL_PORT: ${{ secrets.MAIL_PORT }}
+            MAIL_USE_TLS: ${{ secrets.MAIL_USE_TLS }} 
+            MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }} 
+            MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }} 
+          run: |
+            python run_email_sending_worker.py
