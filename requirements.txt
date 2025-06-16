@@ -75,7 +75,7 @@ pyrsistent==0.20.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.0
 pytz==2025.2
-pywin32==310
+pywin32; sys_platform == 'win32'
 PyYAML==6.0.2
 pyzmq==26.4.0
 redis==5.2.1
