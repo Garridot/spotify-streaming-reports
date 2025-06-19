@@ -17,24 +17,23 @@ def manage_tracks_data(df):
         'image': 'first',
     }).reset_index()
 
-    # Find the most played songs by date (by played_at)
-    most_played = grouped_by_date.loc[grouped_by_date.groupby('date')['played_at'].idxmax()]
+    df["day"] = pd.to_datetime(df["date"]).dt.day_name()
 
-    # Find the most played songs by date (by duration_ms)
-    most_listened = grouped_by_date.loc[grouped_by_date.groupby('date')['duration_ms'].idxmax()]
+    # Group by date and song, adding duration and play count
+    grouped_by_date = df.groupby(['day', 'song_name', 'artist_name']).agg({
+        'duration_ms': 'sum',
+        'played_at': 'count', 
+        'album': 'first',      
+        'image': 'first',
+    }).reset_index()
 
-    # Rename columns for clarity
-    most_played = most_played[['date', 'song_name', 'artist_name', 'played_at', 'album', 'image']]
-    most_listened = most_listened[['date', 'song_name', 'artist_name', 'duration_ms', 'album', 'image']]
+    idx = grouped_by_date.groupby('day')['duration_ms'].idxmax()
+    most_listened = grouped_by_date.loc[idx].reset_index(drop=True) 
 
-    # Convert duration to minutes for better reading
-    most_listened['duration_min'] = most_listened['duration_ms'] / (1000 * 60)
-    
     res = {}
-    res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most_played_by_play_count:"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most_played_tracks_by_date:"] = json.loads(most_played.to_json(orient="records"))
-    res["most_listened_tracks_by_date:"] = json.loads(most_listened.to_json(orient="records"))
+    res["most_listened_by_total_duration"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_played_by_play_count"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records")) 
+    res["most_listened_tracks_by_date"] = json.loads(most_listened.to_json(orient="records"))
     
     return res
 
@@ -43,54 +42,42 @@ def manage_artists_data(df):
             'duration_ms': 'sum',
             'played_at': 'count',            
             'artist_image': 'first',
-        }).reset_index()   
-    
+        }).reset_index()  
+
+    df["day"] = pd.to_datetime(df["date"]).dt.day_name()
+
     # Group by date and song, adding duration and play count
-    grouped_by_date = df.groupby(['date', 'artist_name']).agg({
+    grouped_by_date = df.groupby(['day', 'artist_name']).agg({
         'duration_ms': 'sum',
         'played_at': 'count',       
         'artist_image': 'first',
     }).reset_index()
 
-    # Find the most played songs by date (by played_at)
-    most_played = grouped_by_date.loc[grouped_by_date.groupby('date')['played_at'].idxmax()]
-
-    # Find the most played songs by date (by duration_ms)
-    most_listened = grouped_by_date.loc[grouped_by_date.groupby('date')['duration_ms'].idxmax()]
-
-    # Rename columns for clarity
-    most_played = most_played[['date', 'artist_name', 'played_at', 'artist_image']]
-
-    most_listened = most_listened[['date', 'artist_name', 'duration_ms', 'artist_image']]
-
-    # Convert duration to minutes for better reading
-    most_listened['duration_min'] = most_listened['duration_ms'] / (1000 * 60)    
+    idx = grouped_by_date.groupby('day')['duration_ms'].idxmax()
+    most_listened = grouped_by_date.loc[idx].reset_index(drop=True)    
 
     res = {}    
     res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most_played_by_play_count:"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records"))    
-    res["most_played_artists_by_date:"] = json.loads(most_played.to_json(orient="records"))
-    res["most_listened_artists_by_date:"] = json.loads(most_listened.to_json(orient="records"))
+    res["most_played_by_play_count"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_listened_artists_by_date"] = json.loads(most_listened.to_json(orient="records"))
 
     return res
 
 def manage_genres_data(df):
-    df_exploded = df.explode('genres')
-    # Most played to genres of the week (by played_at)
-    most_played = df_exploded.groupby('genres')['played_at'].sum().sort_values(ascending=False).reset_index()
+    df_exploded = df.explode('genres')    
     # Most listened to genres of the week (by duration_ms)
-    most_listened = df_exploded.groupby('genres')['duration_ms'].sum().sort_values(ascending=False).reset_index()
+    most_listened = df_exploded.groupby('genres')['duration_ms'].sum().sort_values(ascending=False).reset_index()    
     
-    # Most played to genres by date (by played_at)
-    most_played_by_date = df_exploded.groupby(['date', 'genres'])['played_at'].sum().sort_values(ascending=False).reset_index()
+    df_exploded["day"] = pd.to_datetime(df_exploded["date"]).dt.day_name()
+    
+    grouped = df_exploded.groupby(['day', 'genres'], as_index=False)['duration_ms'].sum()    
+    idx = grouped.groupby('day')['duration_ms'].idxmax()
     # Most listened to genres by date (by duration_ms)
-    most_listened_by_date = df_exploded.groupby(['date', 'genres'])['duration_ms'].sum().sort_values(ascending=False).reset_index()
+    most_listened_by_date = grouped.loc[idx].reset_index(drop=True)    
 
     res = {}    
-    res["most_listened_by_total_duration:"] = json.loads(most_listened.head().to_json(orient="records"))
-    res["most_played_by_play_count:"] = json.loads(most_played.head().to_json(orient="records"))
-    res["most_played_genres_by_date:"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
-    res["most_listened_genres_by_date:"] = json.loads(most_played_by_date.head().to_json(orient="records"))
+    res["most_listened_by_total_duration"] = json.loads(most_listened.head().to_json(orient="records"))     
+    res["most_listened_genres_by_date"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
 
     return res
 
@@ -137,7 +124,6 @@ def manage_extra_data(df, last_week):
     res["artists_played_this_week"]= int(total_artist_this_week)
     res["time_listened_this_week"]= int(total_time_this_week) 
     res["most_album_listened"] = json.loads(grouped_by_album.sort_values(["duration_ms"], ascending=[False]).head(1).to_json(orient="records"))
-    res["most_album_played"] = json.loads(grouped_by_album.sort_values(["played_at"], ascending=[False]).head(1).to_json(orient="records"))
     res["top_hours"] = json.loads(top_hours_df.to_json(orient="records"))
     res["top_day"] = json.loads(top_day_df.to_json(orient="records"))
 
@@ -168,8 +154,8 @@ def clean_data_custom(data):
     
     # Special rules: key → additional fields to delete
     special_rules = {
-        'most_listened_by_total_duration:': {'played_at'},  
-        'most_played_by_play_count:': {'duration_ms'},     
+        'most_listened_by_total_duration': {'played_at'},  
+        'most_played_by_play_count': {'duration_ms'},     
     }
     
     cleaned_data = {}

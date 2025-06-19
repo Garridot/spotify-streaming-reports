@@ -1,4 +1,5 @@
 from app.repositories.user_repository import UserRepository
+from app.utils.format_text import highlight_text
 from flask import current_app
 from app.core.database import db
 from datetime import datetime, timedelta
@@ -13,20 +14,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-
-def highlight_text(text):
-    text_format = re.sub(
-        r'\*\*(.*?)\*\*',
-        r'<span style="color: coral; padding: 0.1rem 0.3rem;">\1</span>',
-        text)
-
-    text_format = re.sub(
-        r'\*(.*?)\*',
-        r'<em style="color:coral;">\1</em>',
-        text_format
-    )   
-
-    return text_format     
 
 
 def email_task(mail):

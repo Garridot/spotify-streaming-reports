@@ -20,7 +20,7 @@ def sync_all_users_weekly_register():
     users_repo = UserRepository(db.session).get_all_user()     
     weekly_register_repository = current_app.container.weekly_register_repository 
     daily_register_repository = current_app.container.daily_register_repository 
-    last_day_of_week = datetime.utcnow().date() - timedelta(days=1)
+    last_day_of_week = datetime.utcnow().date() - timedelta(days=1)   
     first_day_of_week = last_day_of_week - timedelta(days=6)      
 
     for user in users_repo:
@@ -68,17 +68,12 @@ def sync_all_users_weekly_register():
             artists_data = manage_artists_data(df) 
             genres_data = manage_genres_data(df)
 
-            last_day_of_last_week = last_day_of_week - timedelta(days=7)     
-            first_day_of_last_week = last_day_of_last_week - timedelta(days=7)
-
-            retrieve_last_week_register =  weekly_register_repository.retrieve_weekly_register(
-                user_id = user.id,
-                start_date = first_day_of_last_week,  
-                end_date = last_day_of_last_week,                
-            ) 
+            retrieve_last_week_register =  weekly_register_repository.retrieve_all_weekly_register_by_user(                                
+                user_id = user.id             
+                )            
 
             if retrieve_last_week_register: 
-                last_week = retrieve_last_week_register.extra_data  
+                last_week = retrieve_last_week_register[0].extra_data  
             else:
                 last_week = None    
 
@@ -90,7 +85,7 @@ def sync_all_users_weekly_register():
                 {"top_genres_data_of_the_week": clean_data_custom(genres_data)},
                 {"extra_data_of_the_week": extra_data}                
             ]
-
+              
             report = generate_deepseek_report(data_report)
             
             weekly_register_repository.add_weekly_register(
