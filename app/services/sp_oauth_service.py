@@ -31,7 +31,7 @@ class SPOAuthService:
     
     def exchange_code_for_tokens(self, code: str) -> TokenResponse:
         """Exchange authorization code for tokens"""
-        token_info = self.sp_oauth.get_access_token(code)
+        token_info = self.sp_oauth.get_access_token(code)        
         return TokenResponse(
             access_token=token_info["access_token"],
             refresh_token=token_info["refresh_token"],
@@ -48,7 +48,7 @@ class SPOAuthService:
         Returns:
             dict: new access token:               
         """
-        data = self.sp_oauth.refresh_access_token(refresh_token) 
+        data = self.sp_oauth.refresh_access_token(refresh_token)         
         
         self.spotify_repo.create_or_update({
             "user_id": user_id,            
@@ -77,13 +77,14 @@ class SPOAuthService:
         user_info = self.spotify_service.get_user_info(tokens.access_token)
         
         # 3. Create/update user
-        user = self.auth_service.create_or_update_user(user_info['email'])        
+        user = self.auth_service.create_or_update_user(user_info['email']) 
         
         # 4. Store credentials
         self.spotify_repo.create_or_update({
             "user_id": user.id,
             "spotify_user_id": user_info['id'],
             "spotify_username": user_info['display_name'],
+            "profile_image_url": user_info["images"][0]["url"],
             "access_token": tokens.access_token,
             "refresh_token": tokens.refresh_token,
             "expires_in": tokens.expires_in

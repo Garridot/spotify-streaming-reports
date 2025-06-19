@@ -9,6 +9,7 @@ class SpotifyAccount(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     spotify_user_id = db.Column(db.String(50), nullable=False, unique=True)
     spotify_username = db.Column(db.String(50), nullable=False, unique=True)
+    profile_image_url = db.Column(db.String(255), nullable=True)
     access_token = db.Column(db.Text, nullable=False)
     refresh_token = db.Column(db.Text, nullable=False)
     token_expires_at = db.Column(db.DateTime, nullable=False)
@@ -18,10 +19,12 @@ class SpotifyAccount(db.Model):
     # Relationship
     user = db.relationship('User', backref=db.backref('spotify_account', uselist=False))
 
-    def __init__(self, user_id: str, spotify_user_id: str, spotify_username: str, access_token: str, refresh_token: str, token_expires_at: datetime):
+    def __init__(self, user_id: str, spotify_user_id: str, spotify_username: str, 
+                access_token: str, refresh_token: str, token_expires_at: datetime, profile_image_url: str = None):
         self.user_id = user_id
         self.spotify_user_id = spotify_user_id
         self.spotify_username = spotify_username
+        self.profile_image_url = profile_image_url
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.token_expires_at = token_expires_at
