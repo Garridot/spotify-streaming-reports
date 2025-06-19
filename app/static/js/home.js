@@ -1,17 +1,82 @@
-import { getUserInfo } from './modules/fetchs.js'; 
+import { getUserInfo, getUserWeeklyReports, getUserStats } from './modules/fetchs.js'; 
+import { 
+    renderMenuProfile, renderMenuWeeklyReports, renderHeaderStats, 
+    renderReportStats,renderTopTrackstStats, renderTopArtiststStats, 
+    renderVariationStats,renderGenresStats, renderExtraStats } from './modules/render.js'; 
 
-
-
-async function init() {
-    const userInfo = await getUserInfo();
-    console.log(userInfo)
-    document.querySelector("body").innerHTML =
-    `
-    <div class="intro-text">
-        <p>Hello ${userInfo["user"]["username"]}, you can see your weekly reports in more detail here, as you receive them via email. </p>
-    </div>
-    `;
+async function renderStats (data) {
+    renderHeaderStats(data["report"],data["time_period"]);       
+    renderTopTrackstStats(data["top_tracks"]);
+    renderTopArtiststStats(data["top_artists"]);
+    renderVariationStats(data["extra_data"]);    
+    renderGenresStats(data["top_genres"]);
+    renderExtraStats(data["extra_data"]);
+    renderReportStats(data["report"]);
 }
 
+async function init() {    
+    const userInfo = await getUserInfo();  
+
+    renderMenuProfile(userInfo);
+    // document.querySelector("body").innerHTML =
+    // `
+    // <div class="intro-text">
+    //     <p>Hello ${userInfo["user"]["username"]}, you can see your weekly reports in more detail here, as you receive them via email. </p>
+    // </div>
+    // `;
+    const userWeeklyReports = await getUserWeeklyReports();
+    
+    renderMenuWeeklyReports(userWeeklyReports["user_history_stats"]); 
+
+    document.querySelector(".menu-btn svg").addEventListener("click", () => {
+        document.querySelector(".menu--").classList.toggle("view");
+        document.querySelector(".menu_history").classList.toggle("view");
+        document.querySelector(".menu-profile").classList.toggle("view");
+    } )
+    
+    const lastReport = userWeeklyReports["user_history_stats"][0];
+
+    const userStats = await getUserStats(lastReport["weekly_id"]);  
+    
+    var stats = userStats["user_stats"];
+
+    await renderStats(stats);
+
+
+    document.querySelectorAll(".menu_history button").forEach(i => {
+        i.addEventListener("click",async () => {
+            var weekly_id = i.value;
+            document.querySelector(".report--").innerHTML = "";
+            const newUserStats = await getUserStats(weekly_id); 
+
+            var stats = newUserStats["user_stats"];
+
+            await renderStats(stats);
+        })
+    }) 
+
+    document.querySelector(".menu-profile button").addEventListener("click", () => {
+        document.querySelector(".profile-options").classList.toggle("view");
+    })
+
+}
 
 init(); 
+
+
+
+
+
+// {
+//     document.querySelector(".report--").innerHTML = "";
+
+//     const userStats = await getUserStats(weekly_id); 
+
+//     var stats = userStats["user_stats"];
+
+//     renderHeaderStats(stats["report"],stats["time_period"]);
+//     renderVariationStats(stats["extra_data"]);
+//     renderReportStats(stats["report"]);
+//     renderTopTrackstStats(stats["top_tracks"]);
+//     renderTopArtiststStats(stats["top_artists"]);
+// }

@@ -1,4 +1,4 @@
-async function fetchData(url, options = {}, retries = 10, timeout = 5000) {
+async function fetchData(url, options = {}, retries = 3, timeout = 5000) {
     try {
         const controller = new AbortController(); // Control para manejar el timeout
         const signal = controller.signal;
@@ -54,6 +54,31 @@ export async function getUserInfo() {
         const data = await fetchData(url);        
         return data;
     } catch (error) {
-        console.error('Failed to fetch Spotify Auth:', error);
+        console.error('Failed to fetch User Info:', error);
+    }
+}
+
+export async function getUserStats(id) {    
+    const url = '/api/user_stats/weekly_stats';
+    const options = {
+        headers: {
+            'X-Weekly-Id': id,              
+        }
+    };    
+    try {
+        const data = await fetchData(url, options);        
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch User Stats:', error);
+    }
+}
+
+export async function getUserWeeklyReports () {
+    const url = '/api/user_stats/weekly_history';
+    try {
+        const data = await fetchData(url);        
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch User Weekly History:', error);
     }
 }

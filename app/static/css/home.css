@@ -4,10 +4,50 @@
     box-sizing: border-box;
 }
 
+
+::-webkit-scrollbar {
+    width: 5px; height: 5px;     
+} 
+::-webkit-scrollbar-track {
+    background: transparent; border-radius: 5px;
+}  
+::-webkit-scrollbar-thumb {
+    background: #888; border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+:root {
+    --color-highlight: #1db954;
+}
+
 body {
     font-family: 'Montserrat', sans-serif;  
     background: #111112;
     color: white;   
+    scrollbar-color: #888 #f1f1f100; /* thumb | track */
+    scrollbar-width: thin;
+}
+
+p {
+    line-height: 2;
+    font-size: large;
+}
+
+hr {
+    margin-bottom: 12px; margin-top: 27px; width: 100%;
+}
+
+section.modal_content__review {
+    width: 100%; padding: 2rem 1rem; border: 1px solid #1a1b1e;
+}
+section.modal-content--tracks {
+    width: 100%; padding: 2rem 1rem; border: 1px solid #1a1b1e;    
+}
+span.review__highlighted {
+    color: var(--color-highlight); padding: 0.1rem 0.3rem; font-weight: 600;
 }
 
 div.intro-text {
@@ -18,3 +58,292 @@ div.intro-text {
     justify-content: center;    
 }
 
+div.wrapped-- {
+    display: flex;    
+}
+
+div.menu-- {
+    width: 18%;
+    background: #181818;
+    height: 100vh;
+    position: fixed;
+    padding: .5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+div.menu-title {
+    margin: 1rem 0rem;
+    display: block;
+    height: 10%;
+}
+
+div.menu-title h1 {
+    font-size: 1.2rem;
+}
+
+div.menu-btn {
+    display: none;
+}
+
+svg {
+    width: 1rem;
+    cursor: pointer;
+    display: block;
+    fill: white;
+}
+
+ul.menu_history {    
+    list-style: none;
+    width:100%;
+    height: 75%;
+    overflow-y: scroll;
+}
+
+div.menu-profile {
+    width: 100%;
+    display: flex;
+    align-items: end;
+    height: 10%;
+    position: relative;
+    padding: 0;
+}
+
+div.menu-profile button {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+div.menu-profile img {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+ul.profile-options {
+    position: absolute;
+    top: -3rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    list-style: none;
+    width: 60%;
+    display: none;
+}
+
+ul.profile-options.view {
+    display: block;
+}
+
+ul.profile-options a {
+    display: flex;
+    color: white;
+    text-decoration: none;
+    padding: .4rem;
+    font-size: smaller;
+    width: 100%;
+}
+
+ul.profile-options a:hover {    
+    text-decoration: underline;
+}
+
+div.menu-- button {
+    background: none;
+    border: none;
+    color: white;
+    width: 95%;
+    padding: 0.5rem;
+    text-align: left;
+    transition: all .1s;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+div.menu-- button:hover {
+    background: #414141;
+}
+
+div.report-- {
+    width: 82%;
+    padding: 0 1rem;
+    margin-left: auto;
+}
+
+section.wrapped-header {
+    width: 100%; margin: 1rem 0 0;
+}
+section.wrapped-header h3 {
+    text-align: center; font-size: .9rem; font-weight: 500;
+}
+section.wrapped-header h1{
+    text-align: center; font-size: 1.3rem; background: var(--color-highlight); padding: 0.3rem; margin: 2rem 0;
+}
+section.wrapped-header p {
+    text-align: center; margin: 1rem 0; width: 100%; padding: 2rem 1rem; border: 1px solid #1a1b1e;
+}
+
+
+div.top-item-modal--tracks {
+    display:flex; justify-content: space-between; align-items: center; 
+}
+div.top-item-modal--tracks ul {
+    margin-bottom: 20px; padding:0; width: 100%;
+}
+div.top-item-modal--tracks h3 {
+    margin:0.5rem 0;
+} 
+div.top-item-modal--tracks h1 {
+    line-height:30px; color: var(--color-highlight);
+}
+
+div.model-table {
+    margin:2rem 0px;
+}
+
+div.top-item-modal-image {
+    /* margin: auto; */
+    margin-bottom: 10px;
+}
+
+div.top-item-modal--tracks img {
+    width: 300px;
+}
+
+
+div.top-item-modal-wrap {
+    width: 100%;
+}
+div.top-item-modal-image-wrapper  {
+    height: 300px; width: 400px;
+}
+top-item-modal-image-wrapper
+div.top-item-modal-label {
+    background:var(--color-highlight); font-weight:600; padding:5px;  
+}
+
+div.top-item-modal-inner {
+    width: 100%;
+}
+
+div.top-item-modal-inner h1 {
+    line-height:30px; margin-top:24px
+}
+
+div.top-item-modal-inner h2 {
+    font-size:xx-large; line-height:30px; color:var(--color-highlight);
+}
+
+div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 0; position: relative; }
+
+
+
+@media(max-width:1000px) {
+    div.report-- {
+        width: 100%;  
+        margin: 4rem 1rem;  
+        padding: 0;    
+    }
+    div.menu-- {
+        display: flex;
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+        align-items: baseline;
+        z-index: 1;
+    }
+    div.menu--.view {
+        height: 100vh;
+    }
+    div.menu-title {
+        width: 50%;
+        height: auto !important;
+        margin: 0 !important;
+    }
+    div.menu-title h1 {
+        font-size: 1rem;
+    }
+    .menu-btn {
+        width: 50%;
+        display: flex !important;
+        justify-content: end;
+    }
+    ul#menu_history {
+        display: none;
+    }
+    ul#menu_history.view {
+        display: block;
+    }
+    .menu-profile {
+        display: none !important;
+    }
+    .menu-profile.view {
+        display: flex !important;
+    }
+
+    .menu-profile button {
+        cursor: auto !important;
+    }
+    .menu-profile button:hover {
+        background: transparent !important;
+    }
+
+    ul.profile-options {
+        width: 100%;
+        display: block !important;
+    }
+    
+    p {        
+        font-size: medium;
+    }
+
+    div.top-item-modal--tracks { flex-wrap: wrap; }
+    div.top-item-modal--tracks ul { text-align: center; }
+    div.top-item-modal-image { margin: auto; }
+}
+@media(max-width:700px) {
+    div.wrapped-header p {
+        margin: 2rem 0;
+    }
+    div.top-item-modal--artists {
+        display: block;
+    }
+    div.top-item-modal-wrap {
+        width: 100%;
+    }
+    div.top-item-modal-image-wrapper {
+        height: 200px;
+    }
+    div.top-item-modal-inner {
+        padding: 0;
+        width: 100%;
+        text-align: start;
+    }
+    div.top-item-modal-inner h1 {
+        font-size: larger;        
+    }
+    div.top-item-modal--tracks h1 {
+        font-size: large;
+    }
+    div.top-item-modal-inner h3 {
+        font-size: medium;
+        margin: .2rem 0 !important;
+    }
+    div.top-item-modal-inner h2 {
+        font-size: larger;
+    }
+    div.top-item-modal-label {        
+        font-size: smaller;
+      }
+    table {
+        font-size: small;    
+    }
+}
+
+@media (max-width: 600px){
+    div.top-item-modal--tracks h1 {
+        font-size: medium;
+        line-height: normal;
+    }    
+}

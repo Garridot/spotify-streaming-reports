@@ -14,7 +14,7 @@ body {
     width: 100%;
     height: 100vh;
     position: absolute;
-    background: url(https://i.etsystatic.com/32519156/r/il/2123e4/4587886470/il_fullxfull.4587886470_4gz6.jpg);
+    background: url("/static/media/il_fullxfull.4587886470_4gz6.webp");
     background-position: center;
     background-size: cover;
     z-index: -1;
@@ -48,7 +48,6 @@ main {
 
 .form_link_buttom button{
     width: 70%;
-    display: block;
     margin: auto;
     padding: .8rem 0.5rem;
     background: #1db954;
@@ -58,6 +57,17 @@ main {
     transition: all .1s;
     font-family: 'Montserrat', sans-serif; 
     font-size: 1rem;    
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_link_buttom svg {
+    width: 1rem;
+    display: block;
+    fill: white;
+    margin-left: 5px;
 }
 
 .form_link_buttom button:hover {
