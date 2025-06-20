@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Resumen Semanal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background-color: #000 !important; color: #fafafa !important; font-family: "Montserrat", sans-serif !important; }
+  .wrapped__ { max-width: 90%; margin: auto; display: flex; flex-wrap: wrap; }
+  .wrapped-header { width: 100%;}
+  .wrapped-header h1 { text-align: center; font-size: 1.3rem;}
+  section.modal-content { width: 50%; padding: 1rem; border: 1px solid #1a1b1e; }
+
+  section.modal-content.modal-content--review { width: 100%; padding: 5rem 1rem; }
+  .modal-content--review p { font-size: x-large; line-height: 2; }
+  span.review--highlighted { background: #FF6554; padding: 0 0.3rem; }
+
+  div.top-item-modal.top-item-modal--artist { padding: 1rem 1rem 0;}
+  div.top-item-modal-image {  height: 250px; }  
+  div.top-item-modal-image-wrapper { height: 100%; width: 100%; background-size: cover; background-position: top;}
+  div.top-item-modal-image-wrapper img { width: 250px;}
+  div.top-item-modal-inner { margin: 10px 20px; font-size: 14px; line-height: 21px; }
+  div.top-item-modal-label { background: #c490ff; font-weight: 700; margin-top: -43px; padding: 5px 10px; position: absolute; }
+  h2.top-item-modal-header { font-size: 24px; line-height: 30px; margin-top: 24px;  }
+  ul.top-item-modal-data-row { display: flex; margin-top: 18px; padding: 0; }  
+  li.top-item-modal-data-item { text-align: center; list-style: none; font-weight: 700; }
+  div.top-item-modal-data-item-value { font-size: 24px; line-height: 30px; text-transform: uppercase; }    
+  hr { margin-bottom: 12px; margin-top: 27px; width: 100%; }
+
+  div.model-table { margin: 10px 20px; padding: 0 1rem 1rem;}
+  table.table.table-striped { width: 100%; }
+  tbody { font-weight: 600; }
+  thead { text-align: justify; font-size: smaller; font-weight: 700; }    
+  tr { font-size: small; }
+  tr th:nth-child(3), tr td:nth-child(3) { text-align: end;}    
+
+  section.modal-content--tracks div.model-table { margin: 2rem 0px; }
+  section.modal-content--tracks div.top-item-modal--tracks { display: flex; justify-content: space-between; position: relative; align-items: center; }
+  section.modal-content--tracks div.top-item-modal-inner { width: 100%; text-align: center; }
+  section.modal-content--tracks .top-item-modal-data-item-title { font-size: 15px; margin: 0 0 .5rem; }
+  section.modal-content--tracks h2.top-item-modal-header { font-size: 20px; margin: 5px 0;}
+  section.modal-content--tracks h4 { margin: 0; font-size: 20px; }
+  section.modal-content--tracks div.top-item-modal-data-item-value { font-size: 22px; }  
+  section.modal-content--tracks div.top-item-modal-label { bottom: -15px; left: 15px; }
+  section.modal-content--tracks ul.top-item-modal-data-row { justify-content: center; margin-top: 4px; }
+  section.modal-content--tracks img.cover-art { width: 30px;}
+  section.modal-content--tracks tr th:nth-child(3),   
+  section.modal-content--tracks tr th:nth-child(5), 
+  section.modal-content--tracks tr td:nth-child(5) { text-align: end;}
+
+  div.top-item-modal--artist div.top-item-modal-inner { display: flex; justify-content: space-between;}
+  div.top-item-modal--artist div.top-item-modal-label { margin-top: -30px; }
+
+  section.modal-content--genres { width: 100%; padding: 1rem; }
+  div.top-item-modal.top-item-modal--genres { width: 100%; margin: 2rem 0; }
+
+  div.modal-content-header h1 { font-size: 1.2rem; }
+  div.chart-data { display: flex; align-items: center; }  
+  span.span-label { width: 15%; }
+  span.span-bar { width: 85%; overflow: hidden;}
+  div.chart-bar { display: block; height: 1.8rem; background: #1a1b1e; margin: 2px 0; position: relative;}
+  div.chart-bar::before {content: " "; position: absolute; width: 250%; top: 0; left: 0; height: 1.8rem; background: #1a1b1e50;}
+
+  section.modal-content--genres div.model-table { margin: 1rem 0; padding: 0; }
+
+  #modal-content-1 { background: #FF6554; color: #1a1b1e;}  
+  #modal-content-2 { background: #9C03D8; color: #1a1a1a;}
+  #modal-content-3 { background: #B0B0FF; color: #1a1a1a;}
+  #modal-content-2 { background: #ff8a1e; color: #1a1a1a;}  
+  #modal-content-4 { background: #17d0a6; color: #1a1a1a;}
+  
+
+  @media(max-width:1000px){    
+    .wrapped__ {
+      max-width: 90%;
+    }
+    section.modal-content--tracks h2.top-item-modal-header {
+      font-size: 20px;
+    }
+    
+    section.modal-content--tracks tr td:nth-child(3) { text-align: start;}
+  }
+
+  @media(max-width:800px){    
+    .wrapped__ { max-width: 90%; }
+    section.modal-content--tracks div.top-item-modal--tracks { display: block;}   
+    div.top-item-modal-image { height: 250px; text-align: center; }
+    section.modal-content--tracks div.top-item-modal-inner { margin: 10px 0; }
+    section.modal-content--tracks div.top-item-modal-label { left: 0; width: fit-content; position: relative; bottom: 0; margin: 0 auto 10px; }
+    section.modal-content--tracks h2.top-item-modal-header { font-size: 18px; margin: 0; }
+    section.modal-content--tracks h4 { font-size: 18px; }
+    section.modal-content--tracks .top-item-modal-data-item-title { font-size: 18px; margin: 0 0 .3rem; }
+    ul.top-item-modal-data-row { display: flex; margin-top: 10px; padding: 0; }
+    section.modal-content--tracks div.top-item-modal-data-item-value { font-size: 20px; }
+
+    section.modal-content--tracks div.model-table { margin: 0; padding: 0 0 1rem; }
+    div.model-table { margin: 10px 20px; padding: 0 1rem 1rem; }
+    section.modal-content--tracks tr th:nth-child(1),     
+    section.modal-content--tracks tr td:nth-child(1) {display: none;}
+
+    div.chart-data { display: flex; align-items: center; justify-content: space-between; }
+    span.span-bar { width: 75%; overflow: hidden; }
+
+    
+  }
+
+</style> 
+<body style="background-color: #000 !important; color: #fafafa !important; font-family: 'Montserrat', sans-serif !important;">
+  <div class="wrapped__">
+    <div class="wrapped-header"><h1>🎧 Your Weekly Summary: {{start_date}} - {{end_date}}</h1></div>   
+    <hr> 
+    
+    <section class="modal-content modal-content--review" >
+      <div class="top-item-modal top-item-modal--review">
+        <p>
+          Hey Garrido, here’s your weekly recap: This week, you’ve <span class="review--highlighted">enjoyed 200 songs</span>, spending a total of <span class="review--highlighted">300 minutes listening</span> to music from <span class="review--highlighted">10 different artists</span>.          
+        </p>                
+      </div>  
+      <div class="top-item-modal top-item-modal--review">        
+        <p>
+          In terms of percentages, the number of songs played has increased by 10%, the total minutes listened to have increased significantly by 30%, and the variety of artists has decreased by 40% compared to last week. 
+        </p>
+      </div>    
+    </section>   
+
+    <section class="modal-content modal-content--tracks" id="modal-content-1">
+      {% set top_track_listened = top_tracks["most_listened_by_total_duration:"][0] %}
+      <div class="top-item-modal top-item-modal--tracks">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper"> 
+            <img src="{{top_track_listened.image}}" alt="{{top_track_listened.album}}">           
+          </div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Track Listened</div>             
+          <h2 class="top-item-modal-header">{{top_track_listened.song | title}} - {{top_track_listened.artist | title}}</h2>
+          <ul class="top-item-modal-data-row">                                      
+            <li class="top-item-modal-data-item">
+                <div class="top-item-modal-data-item-title">Minutes Listened</div>
+                <div class="top-item-modal-data-item-value">{{ (top_track_listened.total_duration_ms / 60000)|round(2) }}</div>
+            </li>               
+          </ul>         
+        </div>          
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th> </th>                  
+                  <th>#</th>  
+                  <th>Tracks</th>                  
+                  <th>Artists</th>                  
+                  <th>Minutes Listened</th>   
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_tracks["most_listened_by_total_duration:"][1:] %}
+            <tr>        
+                <td><img src="{{ track.image }}" class="cover-art" alt=""></td>         
+                <td>{{ loop.index + 1 }}</td>                       
+                <td>{{ track.song }}</td>         
+                <td>{{ track.artist }}</td>                                
+                <td>{{ (track.total_duration_ms / 60000)|round(2) }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+    <section class="modal-content modal-content--tracks" id="modal-content-2">
+      {% set top_track_played = top_tracks["most_played_by_play_count:"][0] %}
+      <div class="top-item-modal top-item-modal--tracks">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper"> 
+            <img src="{{top_track_played.image}}" alt="{{top_track_played.album}}">           
+          </div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Track Played</div>   
+          <h2 class="top-item-modal-header">{{top_track_played.song | title }} - {{top_track_played.artist | title }}</h2>    
+          <ul class="top-item-modal-data-row">       
+            <li class="top-item-modal-data-item">
+              <div class="top-item-modal-data-item-title">Total Play Played</div>
+              <div class="top-item-modal-data-item-value">{{ top_track_played.play_count }}</div>
+            </li>        
+          </ul>         
+        </div>        
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>   
+                  <th> </th>
+                  <th>#</th>  
+                  <th>Tracks</th>                  
+                  <th>Artists</th>                  
+                  <th>Minutes Listened</th>   
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_tracks["most_played_by_play_count:"][1:] %}
+            <tr>       
+                <td><img src="{{ track.image }}" class="cover-art" alt=""></td>            
+                <td>{{ loop.index + 1 }}</td>       
+                <td>{{ track.song }}</td>         
+                <td>{{ track.artist }}</td>                                
+                <td>{{ track.play_count }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+
+    <section class="modal-content modal-content--review" >
+      <div class="top-item-modal top-item-modal--review">        
+        <p>
+          Resumen de preferencias: Esta semana, tu música estuvo dominada por <span class="review--highlighted">The Beatles</span>, con <span class="review--highlighted">62 reproducciones</span> y más de <span class="review--highlighted">9.7 millones de ms</span> de escucha. <span class="review--highlighted">Cotoba</span> también destacó con su canción <span class="review--highlighted">"melon"</span>, reproducida <span class="review--highlighted">10 veces</span>. Los géneros más escuchados fueron <span class="review--highlighted">classic rock</span> y <span class="review--highlighted">psychedelic rock</span>, mostrando un claro gusto por sonidos retro y experimentales.
+        </p>
+      </div>    
+    </section> 
+
+    <section class="modal-content modal-content--artists" id="modal-content-3">
+      {% set top_artist_listened = top_artists["most_listened_by_total_duration:"][0] %}
+      <div class="top-item-modal top-item-modal--artist">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper" style="background: url('{{top_artist_listened.artist_image}}') center center / cover; "></div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Artist Listened</div>   
+          <h2 class="top-item-modal-header">{{top_artist_listened.artist}}</h2>                 
+          <ul class="top-item-modal-data-row">                          
+            <li class="top-item-modal-data-item">
+                <div class="top-item-modal-data-item-title">Minutes Listened</div>
+                <div class="top-item-modal-data-item-value">{{ (top_artist_listened.total_duration_ms / 60000)|round(2) }}</div>
+            </li>            
+          </ul>          
+        </div>  
+        <hr>        
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>#</th>                  
+                  <th>Artists</th>
+                  <th>Minutes Listened</th>                  
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_artists["most_listened_by_total_duration:"][1:] %}
+            <tr>
+                <td>{{ loop.index + 1 }}</td>                
+                <td>{{ track.artist }}</td>
+                <td>{{ (track.total_duration_ms / 60000)|round(2) }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+    <section class="modal-content modal-content--artists" id="modal-content-4">
+      {% set top_artist_played = top_artists["most_played_by_play_count:"][0] %}
+      <div class="top-item-modal top-item-modal--artist">
+        <div class="top-item-modal-image">
+          <div class="top-item-modal-image-wrapper" style="background: url('{{top_artist_played.artist_image}}') center center / cover;"></div>
+        </div>
+        <div class="top-item-modal-inner">
+          <div class="top-item-modal-label">#1 Top Artist Played</div>   
+          <h2 class="top-item-modal-header">{{top_artist_played.artist}}<span></span></h2>                 
+          <ul class="top-item-modal-data-row">  
+            <li class="top-item-modal-data-item">
+              <div class="top-item-modal-data-item-title">Play Played</div>
+              <div class="top-item-modal-data-item-value">{{top_artist_played.play_count}}</div>
+            </li>
+          </ul>          
+        </div>   
+        <hr>       
+      </div>  
+      <div class="model-table">
+        <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>#</th>                  
+                  <th>Artists</th>
+                  <th>Play Played</th>                  
+              </tr>
+          </thead>
+          <tbody>
+            {% for track in top_artists["most_played_by_play_count:"][1:] %}
+            <tr>
+                <td>{{ loop.index + 1 }}</td>                
+                <td>{{ track.artist }}</td>
+                <td>{{ track.play_count }}</td>                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>    
+    </section>
+    <section class="modal-content modal-content--genres">
+      <div class="modal-content-header">
+        <h1>Top genres</h1>
+        <hr>
+      </div>
+      <div class="top-item-modal top-item-modal--genres">
+        {% set top_genres_listened = top_genres["most_listened_by_total_duration:"] %}          
+        {% set genres_data = [
+            { 
+              "genre":top_genres_listened[0]["genres"] | capitalize, 
+              "total_duration": top_genres_listened[0]["total_duration_ms"], 
+              "rate": 100
+            },
+            {
+              "genre": top_genres_listened[1]["genres"] | capitalize,
+              "total_duration": top_genres_listened[1]["total_duration_ms"],
+              "rate": ( (top_genres_listened[1]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            },
+            {
+              "genre": top_genres_listened[2]["genres"] | capitalize,
+              "total_duration": top_genres_listened[2]["total_duration_ms"],
+              "rate": ( (top_genres_listened[2]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            },
+            {
+              "genre": top_genres_listened[3]["genres"] | capitalize,
+              "total_duration": top_genres_listened[3]["total_duration_ms"],
+              "rate": ( (top_genres_listened[3]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            },
+            {
+              "genre": top_genres_listened[4]["genres"] | capitalize,
+              "total_duration": top_genres_listened[4]["total_duration_ms"],
+              "rate": ( (top_genres_listened[4]["total_duration_ms"] / top_genres_listened[0]["total_duration_ms"]) * 100) |round(2)
+            }
+          ]
+        %} 
+        <div class="top-item-modal-chart">          
+            {% for genre in genres_data %} 
+              <div class="chart-data">
+                <span class="span-label"><div class="chart-label">{{genre.genre}}</div></span>
+                <span class="span-bar"><div class="chart-bar" style="width: {{genre.rate}}%;"></div></span>
+              </div>
+            {% endfor %}
+        </div>
+        <div class="model-table">
+          <table class="table table-striped">
+            <thead>
+                <tr>                                     
+                    <th>#</th>  
+                    <th>Genres</th> 
+                    <th>Minutes Listened</th>   
+                </tr>
+            </thead>
+            <tbody>
+              {% for genre in genres_data %}
+              <tr>    
+                  <td>{{ loop.index }}</td>                       
+                  <td>{{ genre.genre }}</td>  
+                  <td>{{ (genre.total_duration / 60000)|round(2) }}</td>                
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div> 
+      </div> 
+    </section>
+
+    <section class="modal-content modal-content--review" >
+      <div class="top-item-modal top-item-modal--review">        
+        <p>
+          Patrón destacado: El <span class='review--highlighted'>lunes</span> fue tu día más activo, con un pico de <span class='review--highlighted'>32 reproducciones</span> de <span class='review--highlighted'>The Beatles</span>, especialmente de su álbum <span class='review--highlighted'>\"1 (Remastered)\"</span>. Además, el <span class='review--highlighted'>viernes</span> dedicaste más de <span class='review--highlighted'>30 minutos seguidos</span> a <span class='review--highlighted'>\"melon\"</span> de Cotoba, sugiriendo que usas esa canción para concentrarte o relajarte al final de la semana. Los géneros <span class='review--highlighted'>classic rock</span> y <span class='review--highlighted'>psychedelic rock</span> predominaron en tus mañanas, mientras que el <span class='review--highlighted'>math rock</span> apareció más en tardes/noches.
+        </p>
+      </div>    
+    </section>
+    <section class="modal-content modal-content--review" >
+      <div class="top-item-modal top-item-modal--review">        
+        <p>
+          Si disfrutas de <span class='review--highlighted'>The Beatles</span> y <span class='review--highlighted'>Cotoba</span>, te encantará explorar a <span class='review--highlighted'>Tame Impala</span> (psicodelia moderna) o <span class='review--highlighted'>Toe</span> (math rock japonés). Un dato llamativo: escuchaste <span class='review--highlighted'>\"Sexy Sadie\"</span> (The Beatles) <span class='review--highlighted'>9 veces en un solo día</span>, ¡una clara señal de que es tu tema recurrente para animarte! 🎵 <span class='review--highlighted'>Tip extra</span>: Prueba con <span class='review--highlighted'>\"Lonerism\"</span> (Tame Impala) o <span class='review--highlighted'>\"For Long Tomorrow\"</span> (Toe) para seguir expandiendo tu radar musical.
+        </p>
+      </div>    
+    </section>
+  </div>
+</body>
+</html>
+

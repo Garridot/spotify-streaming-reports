@@ -63,7 +63,7 @@ div.wrapped-- {
 }
 
 div.menu-- {
-    width: 18%;
+    width: 15%;
     background: #181818;
     height: 100vh;
     position: fixed;
@@ -117,8 +117,7 @@ div.menu-profile button {
 }
 
 div.menu-profile img {
-    border-radius: 50%;
-    margin-right: 10px;
+    border-radius: 50%; margin-right: 10px; width: 35px;   
 }
 
 ul.profile-options {
@@ -166,8 +165,7 @@ div.menu-- button:hover {
 }
 
 div.report-- {
-    width: 82%;
-    padding: 0 1rem;
+    width: 85%;    
     margin-left: auto;
 }
 
@@ -242,7 +240,7 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
 @media(max-width:1000px) {
     div.report-- {
         width: 100%;  
-        margin: 4rem 1rem;  
+        margin: 4rem 0rem;  
         padding: 0;    
     }
     div.menu-- {
@@ -301,6 +299,21 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
     div.top-item-modal--tracks { flex-wrap: wrap; }
     div.top-item-modal--tracks ul { text-align: center; }
     div.top-item-modal-image { margin: auto; }
+
+    table.main-table th:nth-child(1),
+    table.main-table td:nth-child(1){
+        display: none;
+    }
+
+    table.main-table th:nth-child(3),
+    table.main-table td:nth-child(3){
+        text-align: center;
+    }
+
+    table.second-table th:nth-child(2),
+    table.second-table td:nth-child(2){
+        text-align: center;
+    }
 }
 @media(max-width:700px) {
     div.wrapped-header p {

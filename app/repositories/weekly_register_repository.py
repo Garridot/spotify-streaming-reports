@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from app.models.domain.user_stats import DailyTracksPlayed
 from app.models.domain.user_stats import WeeklyUserSummary
 
@@ -39,3 +40,23 @@ class WeeklyTracksPlayedRepository:
         ).first() 
         
         return weekly_register     
+
+    def retrieve_all_weekly_register_by_user(self, user_id):
+        
+        weekly_register = (
+            self.db.query(WeeklyUserSummary)
+            .filter(WeeklyUserSummary.user_id == user_id,)
+            .order_by(desc(WeeklyUserSummary.id))
+            .all() 
+        )
+        
+        return weekly_register  
+
+    def retrieve_required_weekly_register_by_user(self, user_id, weekly_id):
+        
+        weekly_register = self.db.query(WeeklyUserSummary).filter(            
+            WeeklyUserSummary.user_id == user_id,
+            WeeklyUserSummary.id == weekly_id,
+        ).first() 
+        
+        return weekly_register            

@@ -20,3 +20,16 @@ def refresh_token(current_user):
     return jsonify({
         "user_id": current_user.id,
         "access_token": new_access_token})
+
+
+@auth_bp.route("/get_user_info", methods=['GET'])
+@token_required  
+def get_user_info(current_user): 
+    # Search for the user based on the user_id in the token.
+    current_user = {
+        "id": current_user.id,
+        "email": current_user.email,
+        "username": current_user.spotify_account.spotify_username,
+        "profile_image_url": current_user.spotify_account.profile_image_url,
+        } 
+    return jsonify({"user": current_user}) 

@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import request, jsonify, current_app
+from flask import request, jsonify, current_app, make_response, redirect
 from app.core.config import Config
 from app.models.domain.user import User
 
@@ -77,8 +77,8 @@ def token_required(f):
         def decorated(*args, **kwargs):            
 
             try:
-                token = request.headers.get('x-access-token')
-                if not token: return jsonify({'message': 'x-access-token is missing.'}), 403
+                token = request.headers.get('x-access-token') or request.cookies.get('x-access_token')
+                if not token: return make_response(redirect("http://127.0.0.1:8000/"))
                 # Decode the JWT token.
                 data = jwt.decode(token, Config.SECRET_KEY, algorithms=[Config.JWT_ALGORITHM])                
                 # Search for the user based on the user_id in the token.
@@ -87,7 +87,31 @@ def token_required(f):
                 if current_user is None:  return jsonify({'message': 'User not found.'}), 404
 
             except jwt.ExpiredSignatureError:
-                return jsonify({'message': 'Token expired. Please refresh your token.'}), 401
+                
+                refresh_token = request.cookies.get('x-refresh_token')
+                if not refresh_token:
+                    return jsonify({'message': 'Token expired. Please refresh your token.'}), 401
+                try:
+                    refresh_data = jwt.decode(refresh_token, Config.SECRET_KEY, algorithms=[Config.JWT_ALGORITHM])
+                    if refresh_data['scope'] != 'refresh_token':
+                        return jsonify({'message': 'Invalid refresh token.'}), 403
+
+                    current_user = User.query.filter_by(id=refresh_data['sub']).first()
+                    if current_user is None:
+                        return jsonify({'message': 'User not found.'}), 404
+
+                    # Crear nuevo access token
+                    new_access_token = jwt_manager.create_access_token(current_user.id)
+                    
+                    # Crear respuesta intermedia con nuevo token en cookies
+                    response = make_response(f(current_user, *args, **kwargs))
+                    response.set_cookie("x-access_token", new_access_token, httponly=True, samesite='Lax')
+                    return response  
+                except jwt.ExpiredSignatureError:
+                    return jsonify({'message': 'Refresh token expired. Please login again.'}), 401
+                except jwt.InvalidTokenError:
+                    return jsonify({'message': 'Invalid refresh token.'}), 403 
+
             except jwt.InvalidTokenError:
                 return jsonify({'message': 'Invalid token.'}), 403
             except Exception as e:
