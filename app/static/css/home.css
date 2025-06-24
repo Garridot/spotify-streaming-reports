@@ -74,7 +74,7 @@ div.menu-- {
 }
 
 div.menu-title {
-    margin: 1rem 0rem;
+    margin: 1rem 0.5rem;
     display: block;
     height: 10%;
 }
@@ -356,7 +356,7 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
 
 @media (max-width: 600px){
     div.top-item-modal--tracks h1 {
-        font-size: medium;
+        font-size: medium !important;
         line-height: normal;
     }    
 }

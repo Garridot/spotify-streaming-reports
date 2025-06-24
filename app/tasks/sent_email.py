@@ -16,21 +16,18 @@ logging.basicConfig(
 
 
 
-def email_task(mail):
-
-    last_day_of_week = datetime.now().date() - timedelta(days=1)
-    first_day_of_week = last_day_of_week - timedelta(days=6)   
+def email_task(mail):   
 
     weekly_register_repository = current_app.container.weekly_register_repository
 
     users_repo = UserRepository(db.session).get_all_user() 
-    for user in users_repo:  
+    for user in users_repo:          
 
-        weekly_register = weekly_register_repository.retrieve_weekly_register(
-            user_id = user.id, 
-            start_date = first_day_of_week, 
-            end_date = last_day_of_week
-        )
+        week_register =  weekly_register_repository.retrieve_all_weekly_register_by_user(                                
+                user_id = user.id             
+            )    
+        
+        weekly_register = week_register[0]
 
         top_tracks = weekly_register.top_tracks
         top_artists = weekly_register.top_artists

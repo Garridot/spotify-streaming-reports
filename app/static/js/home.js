@@ -4,7 +4,7 @@ import {
     renderReportStats,renderTopTrackstStats, renderTopArtiststStats, 
     renderVariationStats,renderGenresStats, renderExtraStats } from './modules/render.js'; 
 
-async function renderStats (data) {
+async function renderStats (data) {    
     renderHeaderStats(data["report"],data["time_period"]);       
     renderTopTrackstStats(data["top_tracks"]);
     renderTopArtiststStats(data["top_artists"]);
@@ -19,9 +19,7 @@ async function init() {
 
     renderMenuProfile(userInfo);
     
-    const userWeeklyReports = await getUserWeeklyReports();
-
-    console.log(userWeeklyReports["user_stats"])
+    const userWeeklyReports = await getUserWeeklyReports();    
 
     if (userWeeklyReports["user_history_stats"] == null) {
         document.querySelector(".report--").innerHTML =

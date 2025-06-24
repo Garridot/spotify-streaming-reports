@@ -60,7 +60,35 @@ export const renderVariationStats = (data) => {
         <p>This week, you’ve enjoyed <span class="review__highlighted">${total_songs_played} songs</span>, spending a total of <span class="review__highlighted">${time_listened_this_week} minutes listening</span> to music from <span class="review__highlighted">${artists_played_this_week} different artists.</span> </p>
     </div>             
     `       
-    container.appendChild(section); 
+    container.appendChild(section);    
+
+    if(data['weekly_variation_tracks'] != undefined){ 
+
+        const weeklyVariationTracks = data['weekly_variation_tracks']['total_track_variations'];         
+        const weeklyVariationArtists = data['weekly_variation_artists'];       
+        const weeklyVariationTime = data['weekly_variation_time'];
+
+        if (weeklyVariationTracks[0] == "-"){ var resTracks = `has decreased by <span class="review__highlighted">${ weeklyVariationTracks }</span>`;
+        }else{ var resTracks = `has increased by <span class="review__highlighted">+${ weeklyVariationTracks }</span>`;
+        }
+        if (weeklyVariationArtists[0] == "-"){ var resArtists = `has decreased by <span class="review__highlighted">${ weeklyVariationArtists }</span>`;
+        }else{ var resArtists = `has increased by <span class="review__highlighted">+${ weeklyVariationArtists }</span>`;
+        }
+        if (weeklyVariationTime[0] == "-"){ var resTime = `has decreased by <span class="review__highlighted">${ weeklyVariationTime }</span>`;
+        }else{ var resTime = `has increased by <span class="review__highlighted">+${ weeklyVariationTime }</span>`;
+        }
+
+        var section2 = document.createElement("section");
+        section2.className = "modal_content__review"   
+        section2.innerHTML =  
+        `
+        <div class="top-item-modal top-item-modal--review">
+            <p>In terms of percentages, the number of songs played this week ${ resTracks }, the total minutes listened to ${ resTime }, and the variety of artists ${ resArtists } compared to last week.</p>
+        </div>             
+        ` ;
+
+        container.appendChild(section2); 
+    }
 }
 
 export const renderReportStats = (data) => {
@@ -141,7 +169,7 @@ export const renderTopTrackstStats = (data) => {
     section2.innerHTML =  
     `  
     <div class="modal-content-header">
-        <h3>Most listened track by date</h3>
+        <h3>Most listened track by day</h3>
     </div>  
     <div class="model-table">
         <table class="second-table" style="width:100%">                    
@@ -164,7 +192,7 @@ export const renderTopTrackstStats = (data) => {
         tr.innerHTML = 
         `
         <tr>  
-            <td>${ value["date"] }</td>                       
+            <td>${ value["day"] }</td>                       
             <td>${value["song_name"]}</td>  
             <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                 
         </tr>
@@ -233,7 +261,7 @@ export const renderTopArtiststStats = (data) => {
     section2.innerHTML =  
     `  
     <div class="modal-content-header">
-        <h3>Most listened artists by date</h3>
+        <h3>Most listened artists by day</h3>
     </div>  
     <div class="model-table">
         <table class="second-table" style="width:100%">                    
@@ -256,7 +284,7 @@ export const renderTopArtiststStats = (data) => {
         tr.innerHTML = 
         `
         <tr>  
-            <td>${value["date"]}</td>                       
+            <td>${value["day"]}</td>                       
             <td>${value["artist_name"]}</td>  
             <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                 
         </tr>
@@ -328,7 +356,7 @@ export const renderGenresStats = (data) => {
     section2.innerHTML =  
     `  
     <div class="modal-content-header">
-        <h3>Most listened genres by date</h3>
+        <h3>Most listened genres by day</h3>
     </div>  
     <div class="model-table">
         <table style="width:100%">                    
@@ -351,7 +379,7 @@ export const renderGenresStats = (data) => {
         tr.innerHTML = 
         `
         <tr>  
-            <td>${value["date"]}</td>                       
+            <td>${value["day"]}</td>                       
             <td>${value["genres"]}</td>  
             <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                 
         </tr>
@@ -386,5 +414,28 @@ export const renderExtraStats  = (data) => {
     </div>                 
     `; 
 
-    container.appendChild(section);
+    var section2 = document.createElement("section");
+    section2.className = "modal_content__review";
+    section2.innerHTML =  
+    `
+    <div class="top-item-modal--tracks">                                                
+        <ul>                                                
+            <li style="list-style:none;">
+                <p style="font-weight: 600;">Your busiest day this week:</p>
+                <h1 style="font-size: larger;">${data["top_day"][0]["day"]}</h1>                
+                <p style="font-weight: 600;">Tracks Listened: <span class="review__highlighted">${data["top_day"][0]["songs_played"]}</span></p>              
+            </li>               
+        </ul>         
+    </div>  
+    <div class="top-item-modal--tracks">                                                
+    <ul>                                                
+        <li style="list-style:none;">
+            <p style="font-weight: 600;">Your busiest hour this week:</p>
+            <h1 style="font-size: larger;">${data["top_hours"][0]["hours"]}</h1>                
+            <p style="font-weight: 600;">Tracks Listened: <span class="review__highlighted">${data["top_hours"][0]["songs_played"]}</span></p>              
+        </li>               
+    </ul>         
+</div>`; 
+
+    container.appendChild(section2);
 }
