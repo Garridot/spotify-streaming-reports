@@ -63,7 +63,7 @@ div.wrapped-- {
 }
 
 div.menu-- {
-    width: 15%;
+    width: 25%;
     background: #181818;
     height: 100vh;
     position: fixed;
@@ -71,12 +71,14 @@ div.menu-- {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    border-radius: 15px;
 }
 
 div.menu-title {
     margin: 1rem 0.5rem;
     display: block;
     height: 10%;
+    width: 100%;
 }
 
 div.menu-title h1 {
@@ -99,6 +101,9 @@ ul.menu_history {
     width:100%;
     height: 75%;
     overflow-y: scroll;
+    background: #282828;
+    padding: 0.5rem;
+    border-radius: 15px;
 }
 
 div.menu-profile {
@@ -117,7 +122,7 @@ div.menu-profile button {
 }
 
 div.menu-profile img {
-    border-radius: 50%; margin-right: 10px; width: 35px;   
+    border-radius: 50%; margin-right: 10px; width: 30px;   
 }
 
 ul.profile-options {
@@ -165,7 +170,7 @@ div.menu-- button:hover {
 }
 
 div.report-- {
-    width: 85%;    
+    width: 75%;    
     margin-left: auto;
 }
 
@@ -250,6 +255,9 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
         padding: 1rem;
         align-items: baseline;
         z-index: 1;
+        border-radius: 0px;
+        border-bottom-right-radius: 15px;
+        border-bottom-left-radius: 15px;
     }
     div.menu--.view {
         height: 100vh;
@@ -278,6 +286,7 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
     }
     .menu-profile.view {
         display: flex !important;
+        align-items: center;
     }
 
     .menu-profile button {
@@ -288,16 +297,17 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
     }
 
     ul.profile-options {
-        width: 100%;
-        display: block !important;
+        width: 100%;        
+        position: initial;
+        display: flex !important;
+        justify-content: end;
     }
     
     p {        
         font-size: medium;
     }
 
-    div.top-item-modal--tracks { flex-wrap: wrap; }
-    div.top-item-modal--tracks ul { text-align: center; }
+    div.top-item-modal--tracks { flex-wrap: wrap; }    
     div.top-item-modal-image { margin: auto; }
 
     table.main-table th:nth-child(1),
@@ -346,11 +356,14 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
     div.top-item-modal-inner h2 {
         font-size: larger;
     }
-    div.top-item-modal-label {        
-        font-size: smaller;
-      }
-    table {
-        font-size: small;    
+    table.main-table:nth-child(1) th:nth-child(4), table.main-table:nth-child(1) td:nth-child(4),
+    table.second-table th:nth-child(3), table.second-table td:nth-child(3) {
+        display: none;    
+    }
+
+    table.main-table:nth-child(1) th:nth-child(3), table.main-table:nth-child(1) td:nth-child(3),
+    table.second-table th:nth-child(2), table.second-table td:nth-child(2) {
+        text-align: end;
     }
 }
 

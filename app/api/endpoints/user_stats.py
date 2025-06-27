@@ -65,7 +65,7 @@ def get_user_weekly_stats(current_user):
         'patterns': get_report["report"]['patterns'],
         'highlight': get_report["report"]['highlight'],
         'recommendations': get_report["report"]['recommendations'],
-        'insight': get_report["report"]['insight'],
+        'analysis': get_report["report"]['insight'],
     }         
 
     data["report"] = report                     

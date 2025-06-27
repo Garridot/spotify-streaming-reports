@@ -49,6 +49,9 @@ async function init() {
 
         document.querySelectorAll(".menu_history button").forEach(i => {
             i.addEventListener("click",async () => {
+                document.querySelector(".menu--").classList.toggle("view");
+                document.querySelector(".menu_history").classList.toggle("view");
+                document.querySelector(".menu-profile").classList.toggle("view");
                 var weekly_id = i.value;
                 document.querySelector(".report--").innerHTML = "";
                 const newUserStats = await getUserStats(weekly_id); 
