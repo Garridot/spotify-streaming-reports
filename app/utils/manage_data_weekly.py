@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 
+day_order = {'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6}
+
 def manage_tracks_data(df):
     grouped = df.groupby(['song_name', 'artist_name']).agg({
             'duration_ms': 'sum',
@@ -33,6 +35,8 @@ def manage_tracks_data(df):
     res = {}
     res["most_listened_by_total_duration"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
     res["most_played_by_play_count"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records")) 
+    
+    most_listened = most_listened.sort_values('day', key=lambda x: x.map(day_order))
     res["most_listened_tracks_by_date"] = json.loads(most_listened.to_json(orient="records"))
     
     return res
@@ -59,6 +63,8 @@ def manage_artists_data(df):
     res = {}    
     res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
     res["most_played_by_play_count"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records"))    
+    
+    most_listened = most_listened.sort_values('day', key=lambda x: x.map(day_order))
     res["most_listened_artists_by_date"] = json.loads(most_listened.to_json(orient="records"))
 
     return res
@@ -76,7 +82,9 @@ def manage_genres_data(df):
     most_listened_by_date = grouped.loc[idx].reset_index(drop=True)    
 
     res = {}    
-    res["most_listened_by_total_duration"] = json.loads(most_listened.head().to_json(orient="records"))     
+    res["most_listened_by_total_duration"] = json.loads(most_listened.head().to_json(orient="records"))  
+
+    most_listened_by_date = most_listened_by_date.sort_values('day', key=lambda x: x.map(day_order)) 
     res["most_listened_genres_by_date"] = json.loads(most_listened_by_date.head().to_json(orient="records"))
 
     return res
