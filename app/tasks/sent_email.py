@@ -34,7 +34,9 @@ def email_task(mail):
         top_genres = weekly_register.top_genres
         extra_data = weekly_register.extra_data 
         get_report = weekly_register.report
-        
+
+        first_day_of_week = week_register.week_start_date
+        last_day_of_week = week_register.week_end_date        
 
         report = {
             "title" : get_report["title"],

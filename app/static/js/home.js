@@ -4,7 +4,8 @@ import {
     renderReportStats,renderTopTrackstStats, renderTopArtiststStats, 
     renderVariationStats,renderGenresStats, renderExtraStats } from './modules/render.js'; 
 
-async function renderStats (data) {    
+async function renderStats (data) {  
+    console.log(data)  
     renderHeaderStats(data["report"],data["time_period"]);       
     renderTopTrackstStats(data["top_tracks"]);
     renderTopArtiststStats(data["top_artists"]);

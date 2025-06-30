@@ -414,6 +414,8 @@ export const renderExtraStats  = (data) => {
     </div>                 
     `; 
 
+    container.appendChild(section);
+
     var section2 = document.createElement("section");
     section2.className = "modal_content__review";
     section2.innerHTML =  
@@ -428,14 +430,14 @@ export const renderExtraStats  = (data) => {
         </ul>         
     </div>  
     <div class="top-item-modal--tracks">                                                
-    <ul>                                                
-        <li style="list-style:none;">
-            <p style="font-weight: 600;">Your busiest hour this week:</p>
-            <h1 style="font-size: larger;">${data["top_hours"][0]["hours"]}</h1>                
-            <p style="font-weight: 600;">Tracks Listened: <span class="review__highlighted">${data["top_hours"][0]["songs_played"]}</span></p>              
-        </li>               
-    </ul>         
-</div>`; 
+        <ul>                                                
+            <li style="list-style:none;">
+                <p style="font-weight: 600;">Your busiest hour this week:</p>
+                <h1 style="font-size: larger;">${data["top_hours"][0]["hours"]}</h1>                
+                <p style="font-weight: 600;">Tracks Listened: <span class="review__highlighted">${data["top_hours"][0]["songs_played"]}</span></p>              
+            </li>               
+        </ul>         
+    </div>`; 
 
     container.appendChild(section2);
 }

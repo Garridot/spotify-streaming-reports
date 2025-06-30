@@ -61,7 +61,7 @@ def manage_artists_data(df):
     most_listened = grouped_by_date.loc[idx].reset_index(drop=True)    
 
     res = {}    
-    res["most_listened_by_total_duration:"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_listened_by_total_duration"] = json.loads(grouped.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
     res["most_played_by_play_count"] = json.loads(grouped.sort_values(["played_at"], ascending=[False]).head(5).to_json(orient="records"))    
     
     most_listened = most_listened.sort_values('day', key=lambda x: x.map(day_order))
