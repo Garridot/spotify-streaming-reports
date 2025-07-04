@@ -91,11 +91,11 @@ python run.py
 ```
 ## Screenshots
 
-![Weekly Report Login](screenshots/screenshot#1.jpg)
+![Weekly Report Login](screenshots/screenshot_1.jpg)
 
-![Weekly Report Top Tracks](screenshots/screenshot#2.jpg)
+![Weekly Report Top Tracks](screenshots/screenshot_2.jpg)
 
-![Weekly Report Description](screenshots/screenshot#3.jpg)
+![Weekly Report Description](screenshots/screenshot_3.jpg)
 
 ## Contributing
 
