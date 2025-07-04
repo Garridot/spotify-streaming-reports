@@ -20,7 +20,7 @@
 
 
 :root {
-    --color-highlight: #1db954;
+    --color-highlight: #cdf56f;
 }
 
 body {
@@ -63,7 +63,7 @@ div.wrapped-- {
 }
 
 div.menu-- {
-    width: 25%;
+    width: 20%;
     background: #181818;
     height: 100vh;
     position: fixed;
@@ -170,7 +170,7 @@ div.menu-- button:hover {
 }
 
 div.report-- {
-    width: 75%;    
+    width: 80%;    
     margin-left: auto;
 }
 
@@ -181,7 +181,7 @@ section.wrapped-header h3 {
     text-align: center; font-size: .9rem; font-weight: 500;
 }
 section.wrapped-header h1{
-    text-align: center; font-size: 1.3rem; background: var(--color-highlight); padding: 0.3rem; margin: 2rem 0;
+    text-align: center; font-size: 1.3rem; background: #1db954; padding: 0.3rem; margin: 2rem 0;
 }
 section.wrapped-header p {
     text-align: center; margin: 1rem 0; width: 100%; padding: 2rem 1rem; border: 1px solid #1a1b1e;
@@ -189,7 +189,10 @@ section.wrapped-header p {
 
 
 div.top-item-modal--tracks {
-    display:flex; justify-content: space-between; align-items: center; 
+    display:flex; justify-content: space-between; align-items: center; color: black;  background: #ef1f9d;  padding: 1rem;
+}
+div.top-item-modal--tracks span.review__highlighted {
+    color: #d0f972;
 }
 div.top-item-modal--tracks ul {
     margin-bottom: 20px; padding:0; width: 100%;
@@ -198,7 +201,7 @@ div.top-item-modal--tracks h3 {
     margin:0.5rem 0;
 } 
 div.top-item-modal--tracks h1 {
-    line-height:30px; color: var(--color-highlight);
+    line-height:30px; color: #d0f972;
 }
 
 div.model-table {
@@ -221,7 +224,7 @@ div.top-item-modal-wrap {
 div.top-item-modal-image-wrapper  {
     height: 300px; width: 400px;
 }
-top-item-modal-image-wrapper
+
 div.top-item-modal-label {
     background:var(--color-highlight); font-weight:600; padding:5px;  
 }
@@ -308,7 +311,7 @@ div.chart-bar{ display: block; height: 1.5rem; background: #ffffff; margin: 5px 
     }
 
     div.top-item-modal--tracks { flex-wrap: wrap; }    
-    div.top-item-modal-image { margin: auto; }
+    div.top-item-modal-image { margin: auto; margin-bottom: 10px;}
 
     table.main-table th:nth-child(1),
     table.main-table td:nth-child(1){

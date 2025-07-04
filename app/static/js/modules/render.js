@@ -134,7 +134,7 @@ export const renderTopTrackstStats = (data) => {
         <table class="main-table" style="width:100%">                    
         <thead style="text-align:justify;">
             <tr>                             
-                <th>#</th>  
+                <th></th>  
                 <th>Tracks</th>                  
                 <th>Artists</th>                  
                 <th style="text-align:end">Minutes Listened</th>   
@@ -152,7 +152,7 @@ export const renderTopTrackstStats = (data) => {
         tr.innerHTML = 
         `
         <tr>  
-            <td>${parseInt(key) + 1}</td>                       
+            <td><img src="${value["image"]}" alt="${value["album"]}" style="width:50px"></td>                       
             <td>${value["song_name"]}</td>         
             <td>${value["artist_name"]}</td>                                
             <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                
@@ -174,9 +174,10 @@ export const renderTopTrackstStats = (data) => {
     <div class="model-table">
         <table class="second-table" style="width:100%">                    
         <thead style="text-align:justify;">
-            <tr>                             
-                <th>Day</th>  
-                <th>Tracks</th>    
+            <tr>   
+                <th></th>
+                <th>Tracks</th>                 
+                <th>Day</th>                      
                 <th style="text-align:end">Minutes Listened</th>   
             </tr>
         </thead>
@@ -191,9 +192,10 @@ export const renderTopTrackstStats = (data) => {
         var tr = document.createElement("tr");
         tr.innerHTML = 
         `
-        <tr>  
-            <td>${ value["day"] }</td>                       
-            <td>${value["song_name"]}</td>  
+        <tr>
+            <td><img src="${value["image"]}" alt="${value["album"]}" style="width:50px"> </td>
+            <td>${value["song_name"]}</td>
+            <td>${ value["day"] }</td> 
             <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                 
         </tr>
         `;
@@ -266,9 +268,9 @@ export const renderTopArtiststStats = (data) => {
     <div class="model-table">
         <table class="second-table" style="width:100%">                    
         <thead style="text-align:justify;">
-            <tr>                             
-                <th>Day</th>  
-                <th>Artists</th>    
+            <tr>  
+                <th>Artists</th>                      
+                <th>Day</th>                    
                 <th style="text-align:end">Minutes Listened</th>   
             </tr>
         </thead>
@@ -284,8 +286,8 @@ export const renderTopArtiststStats = (data) => {
         tr.innerHTML = 
         `
         <tr>  
-            <td>${value["day"]}</td>                       
-            <td>${value["artist_name"]}</td>  
+            <td>${value["artist_name"]}</td>
+            <td>${value["day"]}</td>  
             <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                 
         </tr>
         `;
@@ -420,20 +422,20 @@ export const renderExtraStats  = (data) => {
     section2.className = "modal_content__review";
     section2.innerHTML =  
     `
-    <div class="top-item-modal--tracks">                                                
+    <div>                                                
         <ul>                                                
             <li style="list-style:none;">
                 <p style="font-weight: 600;">Your busiest day this week:</p>
-                <h1 style="font-size: larger;">${data["top_day"][0]["day"]}</h1>                
+                <h1 style="font-size: larger; color: var(--color-highlight);">${data["top_day"][0]["day"]}</h1>                
                 <p style="font-weight: 600;">Tracks Listened: <span class="review__highlighted">${data["top_day"][0]["songs_played"]}</span></p>              
             </li>               
         </ul>         
     </div>  
-    <div class="top-item-modal--tracks">                                                
+    <div>                                                
         <ul>                                                
             <li style="list-style:none;">
                 <p style="font-weight: 600;">Your busiest hour this week:</p>
-                <h1 style="font-size: larger;">${data["top_hours"][0]["hours"]}</h1>                
+                <h1 style="font-size: larger; color: var(--color-highlight);">${data["top_hours"][0]["hours"]}</h1>                
                 <p style="font-weight: 600;">Tracks Listened: <span class="review__highlighted">${data["top_hours"][0]["songs_played"]}</span></p>              
             </li>               
         </ul>         
