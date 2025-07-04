@@ -91,6 +91,12 @@ python run.py
 ```
 ## Screenshots
 
+![Weekly Report Login](screenshots/screenshot#1.jpg)
+
+![Weekly Report Top Tracks](screenshots/screenshot#2.jpg)
+
+![Weekly Report Description](screenshots/screenshot#3.jpg)
+
 ## Contributing
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
