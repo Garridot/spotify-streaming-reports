@@ -156,6 +156,40 @@ def manage_extra_data(df, last_week):
 
     return  res
 
+def manage_last_activity(data):
+
+    df = pd.DataFrame(json.loads(data))
+
+    grouped_tracks = df.groupby(['song_name', 'artist_name']).agg({
+        'duration_ms': 'sum',
+        'played_at': 'count',
+        'album': 'first',
+        'image': 'first',
+    }).reset_index()     
+
+    grouped_artists = df.groupby(['artist_name']).agg({
+        'duration_ms': 'sum',
+        'played_at': 'count',            
+        'artist_image': 'first',
+    }).reset_index() 
+
+    grouped_by_album = df.groupby(['album']).agg({
+        'duration_ms': 'sum',
+        'played_at': 'count',  
+        'artist_name': 'first',     
+        'image': 'first',
+    }).reset_index()
+
+    df_exploded = df.explode('genres')   
+    most_genres_listened = df_exploded.groupby('genres')['duration_ms'].sum().sort_values(ascending=False).reset_index()
+
+    res = {}
+    res["most_tracks_listened"] = json.loads(grouped_tracks.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_artists_listened"] = json.loads(grouped_artists.sort_values(["duration_ms"], ascending=[False]).head(5).to_json(orient="records"))    
+    res["most_genres_listened"] = json.loads(most_genres_listened.head().to_json(orient="records")) 
+    res["most_album_listened"] = json.loads(grouped_by_album.sort_values(["duration_ms"], ascending=[False]).head(1).to_json(orient="records"))
+
+    return res
 
 def clean_data_custom(data):
     default_fields_to_remove = {'album', 'image','duration_min','artist_image'}

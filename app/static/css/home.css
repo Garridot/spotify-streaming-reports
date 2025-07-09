@@ -189,13 +189,13 @@ section.wrapped-header p {
 
 
 div.top-item-modal--tracks {
-    display:flex; justify-content: space-between; align-items: center; color: black;  background: #ef1f9d;  padding: 1rem;
+    display:flex; justify-content: space-between; align-items: center; color: black;  background: #ef1f9d;  padding: 1rem; border-radius: 5px;
 }
 div.top-item-modal--tracks span.review__highlighted {
     color: #d0f972;
 }
 div.top-item-modal--tracks ul {
-    margin-bottom: 20px; padding:0; width: 100%;
+    margin-bottom: 20px; padding:0; width: 100%; text-align: center;
 }
 div.top-item-modal--tracks h3 {
     margin:0.5rem 0;

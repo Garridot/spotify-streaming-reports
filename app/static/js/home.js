@@ -1,11 +1,10 @@
-import { getUserInfo, getUserWeeklyReports, getUserStats } from './modules/fetchs.js'; 
+import { getUserInfo, getUserWeeklyReports, getUserStats, getUserActivity } from './modules/fetchs.js'; 
 import { 
     renderMenuProfile, renderMenuWeeklyReports, renderHeaderStats, 
     renderReportStats,renderTopTrackstStats, renderTopArtiststStats, 
-    renderVariationStats,renderGenresStats, renderExtraStats } from './modules/render.js'; 
+    renderVariationStats,renderGenresStats, renderExtraStats, renderLastActivity } from './modules/render.js'; 
 
-async function renderStats (data) {  
-    console.log(data)  
+async function renderStats (data) {       
     renderHeaderStats(data["report"],data["time_period"]);       
     renderTopTrackstStats(data["top_tracks"]);
     renderTopArtiststStats(data["top_artists"]);
@@ -22,13 +21,24 @@ async function init() {
     
     const userWeeklyReports = await getUserWeeklyReports();    
 
-    if (userWeeklyReports["user_history_stats"] == null) {
+    if (userWeeklyReports["user_history_stats"] == null) {  
+        
+        var li = document.createElement("li");
+        li.style.margin = "1rem 0.5rem";
+        li.innerHTML =
+        `<span style="font-size: smaller; font-weight: 600; ">Weekly Reports:</span>`;
+
+        document.querySelector("#menu_history").appendChild(li); 
+
         document.querySelector(".report--").innerHTML =
-        `
-        <div class="intro-text">
-            <p>Hello ${userInfo["user"]["username"]}, you can see your weekly reports in more detail here, as you receive them via email. </p>
-        </div>
-        `;
+        `<section class="modal_content__review">
+            <p style="text-align: center;">Hello <span class="review__highlighted">${userInfo["user"]["username"]}</span>, you can view your detailed weekly reports, including your most listened tracks, artists, and genres, as well as highlighted patterns and recommendations. You will be notified via email every week.</p>
+        </section>`;
+
+        const lastActivity = await getUserActivity(); 
+              
+        renderLastActivity(lastActivity["user_last_activity"]);
+
     } 
     else{
         renderMenuWeeklyReports(userWeeklyReports["user_history_stats"]); 
@@ -64,10 +74,12 @@ async function init() {
         })
     }; 
 
-    document.querySelector(".menu-profile button").addEventListener("click", () => {
-        document.querySelector(".profile-options").classList.toggle("view");
-    })
-
 }
 
 init(); 
+
+document.querySelector(".menu-btn svg").addEventListener("click", () => { 
+    document.querySelector(".menu--").classList.toggle("view");
+    document.querySelector(".menu_history").classList.toggle("view");
+    document.querySelector(".menu-profile").classList.toggle("view");
+})

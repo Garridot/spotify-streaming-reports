@@ -1,28 +1,28 @@
-async function fetchData(url, options = {}, retries = 3, timeout = 5000) {
+async function fetchData(url, options = {}, retries = 3, timeout = 9000) {
     try {
-        const controller = new AbortController(); // Control para manejar el timeout
+        const controller = new AbortController(); // Control to manage the waiting time
         const signal = controller.signal;
 
-        // Crear un timeout para abortar la solicitud si se demora más de lo esperado
+        // Create a timeout to abort the request if it takes longer than expected
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        // Intentar la solicitud con fetch
+        // Attempt the request with fetch
         const response = await fetch(url, { ...options, signal, credentials: 'include', });
 
-        clearTimeout(timeoutId); // Limpiar el timeout si la solicitud es exitosa
+        clearTimeout(timeoutId); // Clear the timeout if the request is successful
 
-        // Comprobar si la respuesta fue exitosa (status 2xx)
+        // Check if the response was successful (status 2xx)
         if (!response.ok) {
             throw new Error(`Error ${response.status}: ${response.statusText}`);
         }        
 
-        const data = await response.json(); // Parsear el JSON
+        const data = await response.json(); // Parse the JSON
         return data;
     } catch (error) {
                 
         if (!error.message.includes('404')){
 
-            if (retries > 0) { // Si la solicitud falla y hay reintentos disponibles
+            if (retries > 0) { // If the request fails and retries are available
                 console.warn(`Attempt failed, retrying... (${retries} left)`);
                 return fetchData(url, options, retries - 1, timeout);
             } else if (error.name === 'AbortError') {
@@ -30,7 +30,7 @@ async function fetchData(url, options = {}, retries = 3, timeout = 5000) {
                 throw new Error('Request timeout');
             } else {
                 console.error(`Request failed: ${error.message}`);
-                throw error; // Lanza el error para que se maneje fuera de la función
+                throw error; // Throw the error to be handled outside the function
             }
         } else { 
             throw error;
@@ -80,5 +80,15 @@ export async function getUserWeeklyReports () {
         return data;
     } catch (error) {
         console.error('Failed to fetch User Weekly History:', error);
+    }
+}
+
+export async function getUserActivity () {
+    const url = '/api/user_stats/user_last_activity';
+    try {
+        const data = await fetchData(url);        
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch User Last Activity:', error);
     }
 }

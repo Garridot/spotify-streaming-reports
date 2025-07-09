@@ -1,8 +1,11 @@
 from app.core.security import token_required, refresh_token_required, jwt_manager, redirect
 from flask import Blueprint, current_app, redirect, request, jsonify
+from app.tasks.user_sync_service import CreateUserStats 
+from datetime import datetime, timedelta, timezone, time
 from flask import current_app
+from app.utils.manage_data_weekly import manage_last_activity
 import json
-import datetime
+# import datetime
 
 stats_bp = Blueprint('stats', __name__, url_prefix='/api/user_stats')
 
@@ -71,3 +74,24 @@ def get_user_weekly_stats(current_user):
     data["report"] = report                     
         
     return jsonify({"user_stats": data}) 
+
+
+@stats_bp.route("/user_last_activity", methods=['GET'])
+@token_required  
+def get_user_last_activity(current_user): 
+
+    get_user_stats = CreateUserStats(current_user.id)
+
+    # Retrieve localtime
+    local_time = datetime.now().astimezone()  
+    # Convert localtime to UTC
+    date = local_time.astimezone(timezone.utc)   
+
+    date_limit= datetime.combine(date.date(), time(0, 0, 0, tzinfo=timezone.utc))     
+
+    after_timestamp = int(date_limit.timestamp() * 1000) 
+
+    sp_res = get_user_stats._get_user_tracks(after_timestamp=after_timestamp) 
+
+    return jsonify({"user_last_activity": manage_last_activity(sp_res)}) 
+     

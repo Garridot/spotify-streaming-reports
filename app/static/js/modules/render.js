@@ -443,3 +443,181 @@ export const renderExtraStats  = (data) => {
 
     container.appendChild(section2);
 }
+
+export const renderLastActivity = (data) => {
+
+    var topTracks = data["most_tracks_listened"];
+    var section1 = document.createElement("section");
+    section1.className = "modal_content__review"   
+    section1.innerHTML =  
+    `
+    <div class="top-item-modal--tracks">                                                
+        <ul>                                                
+            <li style="list-style:none;">
+                <h3>Your Most Listened Track Right Now:</h3>
+                <h1>${topTracks[0]["song_name"]} - ${topTracks[0]["artist_name"]}</h1>                
+                <h3>Minutes Listened: <span class="review__highlighted">${(parseInt(topTracks[0]["duration_ms"]) / 60000).toFixed(2)}</span></h3>              
+            </li>               
+        </ul> 
+        <div class="top-item-modal-image">
+            <img src="${topTracks[0]["image"]}" alt="${topTracks[0]["album"]}"> 
+        </div>
+    </div> 
+    <hr> 
+    <div class="model-table">
+        <table class="main-table" style="width:100%">                    
+        <thead style="text-align:justify;">
+            <tr>                             
+                <th></th>  
+                <th>Tracks</th>                  
+                <th>Artists</th>                  
+                <th style="text-align:end">Minutes Listened</th>   
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+    </div>            
+    `; 
+
+    for (const [key, value] of Object.entries(topTracks).slice(1)) {
+
+        var tr = document.createElement("tr");
+        tr.innerHTML = 
+        `
+        <tr>  
+            <td><img src="${value["image"]}" alt="${value["album"]}" style="width:50px"></td>                       
+            <td>${value["song_name"]}</td>         
+            <td>${value["artist_name"]}</td>                                
+            <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                
+        </tr>
+        `;
+        section1.querySelector("tbody").appendChild(tr);
+    }
+    container.appendChild(section1);
+
+
+    var topArtists = data["most_artists_listened"];
+    var section2 = document.createElement("section");
+    section2.className = "modal_content__review"   
+    section2.innerHTML =  
+    `
+    
+    <div class="top-item-modal--tracks">                                                
+        <ul>                                                
+            <li style="list-style:none;">
+                <h3>Your Most Listened Artist Right Now:</h3>
+                <h1>${topArtists[0]["artist_name"]}</h1>                
+                <h3>Minutes Listened: <span class="review__highlighted">${(parseInt(topArtists[0]["duration_ms"]) / 60000).toFixed(2)}</span></h3>              
+            </li>               
+        </ul> 
+        <div class="top-item-modal-image">
+            <div class="top-item-modal-image-wrapper" style="background:url(${topArtists[0]["artist_image"]}) center center/cover;"></div>
+        </div>
+    </div> 
+    <hr> 
+    <div class="model-table">
+        <table class="main-table" style="width:100%">                    
+        <thead style="text-align:justify;">
+            <tr>                             
+                <th>#</th>                   
+                <th>Artists</th>                  
+                <th style="text-align:end">Minutes Listened</th>   
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+    </div>            
+    `; 
+
+    for (const [key, value] of Object.entries(topArtists).slice(1)) {
+
+        var tr = document.createElement("tr");
+        tr.innerHTML = 
+        `
+        <tr>  
+            <td>${parseInt(key) + 1}</td>   
+            <td>${value["artist_name"]}</td>                                
+            <td style="text-align:end">${(parseInt(value["duration_ms"]) / 60000).toFixed(2)}</td>                
+        </tr>
+        `;
+        section2.querySelector("tbody").appendChild(tr);
+    }
+    container.appendChild(section2);
+
+    
+    const topGenres = data["most_genres_listened"]; 
+    const genresData = [        
+        { 
+            "genre": capitalizeText(topGenres[0]["genres"]), 
+            "total_duration": (parseInt(topGenres[0]["duration_ms"]) / 60000).toFixed(2), 
+            "rate": 100
+        },
+        {
+            "genre": capitalizeText(topGenres[1]["genres"]),
+            "total_duration": (parseInt(topGenres[1]["duration_ms"]) / 60000).toFixed(2),
+            "rate": ( (topGenres[1]["duration_ms"] / topGenres[0]["duration_ms"]) * 100).toFixed(2)
+        },
+        {
+            "genre": capitalizeText(topGenres[2]["genres"]),
+            "total_duration": (parseInt(topGenres[2]["duration_ms"]) / 60000).toFixed(2),
+            "rate": ( (topGenres[2]["duration_ms"] / topGenres[0]["duration_ms"]) * 100).toFixed(2)
+        },
+        {
+            "genre": capitalizeText(topGenres[3]["genres"]),
+            "total_duration": (parseInt(topGenres[3]["duration_ms"]) / 60000).toFixed(2),
+            "rate": ( (topGenres[3]["duration_ms"] / topGenres[0]["duration_ms"]) * 100).toFixed(2)
+        },
+        {
+            "genre": capitalizeText(topGenres[4]["genres"]),
+            "total_duration": (parseInt(topGenres[4]["duration_ms"]) / 60000).toFixed(2),
+            "rate": ( (topGenres[4]["duration_ms"] / topGenres[0]["duration_ms"]) * 100).toFixed(2)
+        }
+    ];
+
+    var section3 = document.createElement("section");
+    section3.className = "modal_content__review";
+    section3.innerHTML =  
+    `
+    <div class="modal-content-header">
+        <h3>Top Genres Right Now:</h3>
+        <hr style="width: 100%;">
+    </div>
+    <div class="top-item-modal--genres" style="margin: 2rem 0 0;"></div>              
+    `;   
+
+    for (const genre in genresData){        
+        var div = document.createElement("div");
+        div.className = "chart-data";
+        div.innerHTML = 
+        `        
+        <span class="span-label"><div class="chart-label" style="margin: 5px 0;">${genresData[genre].genre} : ${genresData[genre].total_duration} Mins.</div></span>
+        <span class="span-bar"><div class="chart-bar" style="width: ${genresData[genre].rate}%;"></div></span>        
+        `;
+        section3.querySelector(".top-item-modal--genres").appendChild(div);
+    };
+
+    container.appendChild(section3);
+
+    
+    const topAlbum = data["most_album_listened"][0];    
+    var section4 = document.createElement("section");
+    section4.className = "modal_content__review"   
+    section4.innerHTML =  
+    `
+    <div class="top-item-modal--tracks">                                                
+        <ul>                                                
+            <li style="list-style:none;">
+                <h3>Your Most Listened Album Right Now:</h3>
+                <h1>${topAlbum["album"]} - ${topAlbum["artist_name"]}</h1>                
+                <h3>Minutes Listened: <span class="review__highlighted">${(parseInt(topAlbum["duration_ms"]) / 60000).toFixed(2)}</span></h3>              
+            </li>               
+        </ul> 
+        <div class="top-item-modal-image">
+            <img src="${topAlbum["image"]}" alt="${topAlbum["album"]}"> 
+        </div>
+    </div>                 
+    `; 
+    container.appendChild(section4);
+}
