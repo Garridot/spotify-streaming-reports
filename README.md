@@ -11,6 +11,7 @@ Python project that retrieves and reports a user's Spotify usage, weekly highlig
 - [Features](#features)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Scheduled Workflows (GitHub Actions)](#scheduled-workflows-github-actions)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
 - [Contributing](#contributing)
@@ -100,7 +101,7 @@ print(secrets.token_hex(32))
 DATABASE_URL=postgresql://user:password@host:port/dbname
 ```
 
-## ⚙️ Scheduled Workflows (GitHub Actions)
+## Scheduled Workflows (GitHub Actions)
 
 This project uses GitHub Actions to automatically run background tasks at defined intervals:
 

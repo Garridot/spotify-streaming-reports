@@ -48,10 +48,7 @@ jobs:
           CLOUDAMQP_URL: ${{ secrets.CLOUDAMQP_URL }}          
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
-          SPOTIFY_REDIRECT_URI: ${{ secrets.SPOTIFY_REDIRECT_URI }}
-          LASTFM_API_KEY : ${{ secrets.LASTFM_API_KEY }}
-          LASTFM_API_SECRET : ${{ secrets.LASTFM_API_SECRET }}
-          LASTFM_CALLBACK_URL: ${{ secrets.LASTFM_CALLBACK_URL }}
+          SPOTIFY_REDIRECT_URI: ${{ secrets.SPOTIFY_REDIRECT_URI }}          
           FLASK_ENV: ${{ secrets.FLASK_ENV }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
