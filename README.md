@@ -78,8 +78,103 @@ You will need an OpenRouter API key to access DeepSeek models. You can get yours
 OPENROUTER_API_KEY=your_openrouter_api_key
 ```
 
-Add the following to your `.env` file:
+Add the following to your `.env` file.
 
+To run this project, you also need to set the following environment variables.
+
+```bash
+SECRET_KEY=your_generated_secret_key              # Used for Flask session security
+FLASK_ENV=default                                  # Use 'production' to activate DATABASE_URL
+DATABASE_URL=your_database_connection_url         # Required when FLASK_ENV is set to 'production'
+```
+
+🔐 **Notes**
+- **SECRET_KEY**: You can generate a secure key in Python:
+
+```python
+import secrets
+print(secrets.token_hex(32))
+```
+- **DATABASE_URL**: Only required if ```FLASK_ENV=production```. It should be a valid SQLAlchemy-compatible connection string, for example:
+```bash
+DATABASE_URL=postgresql://user:password@host:port/dbname
+```
+
+## ⚙️ Scheduled Workflows (GitHub Actions)
+
+This project uses GitHub Actions to automatically run background tasks at defined intervals:
+
+🕐 ```Daily Spotify Sync```
+* Purpose: Collects recent Spotify activity for each user.
+* Schedule: Runs every hour at minute 5.
+* Script Executed: ```run_worker.py```
+```
+name: Daily Spotify Sync
+  schedule: '5 * * * *'  # Runs at the fifth minute of every hour
+```
+📅 ```Weekly Report Task```
+- Purpose: Generates weekly reports using Spotify data and AI-powered summaries.
+- Schedule: Runs every Monday at 01:00 UTC.
+- Script Executed: ```run_weekly_worker.py```
+- Integrates: DeepSeek via OpenRouter for generating insights and summaries.
+```
+- name: Weekly Tasks
+  schedule: '0 1 * * 1'  # Every Monday at 01:00 UTC
+```
+🔐 ```Secrets Used```
+
+Both workflows rely on the following environment variables defined as GitHub Secrets:
+
+* ```SPOTIFY_CLIENT_ID```, ```SPOTIFY_CLIENT_SECRET```, ```SPOTIFY_REDIRECT_URI```
+* ```DEEPSEEK_API_KEY``` (only for weekly reports)
+* ```DATABASE_URL```, ```SECRET_KEY```, ```FLASK_ENV```
+
+**Optional**
+
+You can notify users about their weekly reports by sending emails and adding this task to the ```weekly_task.yml``` file:
+```
+    process_email_sending_task:         # Define a job called "weekly_report" 
+      runs-on: ubuntu-latest              # Run on the latest available Ubuntu
+      steps:                              # Steps that the job will execute in sequence       
+        - uses: actions/checkout@v2       # Step 1: Checkout the code
+        
+        - name: Set up Python             # Step 2: Configure Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.8'
+            
+        - name: Install dependencies      # Step 3: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt          
+            
+        - name: Run Email Sending Task    # Step 4: Run the script   
+          env:
+            CLOUDAMQP_URL: ${{ secrets.CLOUDAMQP_URL }}  
+            FLASK_ENV: ${{ secrets.FLASK_ENV }}
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+            MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
+            MAIL_PORT: ${{ secrets.MAIL_PORT }}
+            MAIL_USE_TLS: ${{ secrets.MAIL_USE_TLS }} 
+            MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }} 
+            MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }} 
+            SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+            SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+            SPOTIFY_REDIRECT_URI: ${{ secrets.SPOTIFY_REDIRECT_URI }}
+          run: |
+            python run_email_sending_worker.py
+```
+
+Ensure you add the required email configurations in the ```.env``` file and set them as ```GitHub Secrets```:
+
+```
+MAIL_SERVER=YOUR_MAIL_SERVER
+MAIL_PORT=YOUR_MAIL_PORT
+MAIL_USE_TLS=YOUR_MAIL_USE_TLS
+MAIL_USERNAME=YOUR_MAIL_USERNAME
+MAIL_PASSWORD=YOUR_MAIL_PASSWORD
+```
 
 ## Usage
 
