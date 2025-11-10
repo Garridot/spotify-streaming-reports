@@ -42,15 +42,15 @@ class RabbitMQWorker:
             self.channel.start_consuming()
 
     def process_task(self, ch, method, properties, body):
-        """Process the received message"""
         try:
             message = json.loads(body)
             logger.info(f"Processing task at {datetime.utcnow()}: {message}")
             
             if message.get('task') == 'daily_sync':
+                logger.info("Starting daily sync task...")
                 sync_all_users_daily_register()
+                logger.info("Daily sync task finished successfully")
             
-            # close the connection after processing is complete
             self.close()    
                 
         except Exception as e:
