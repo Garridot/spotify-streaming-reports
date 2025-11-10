@@ -13,7 +13,7 @@ charset-normalizer==3.4.1
 click==8.1.8
 colorama==0.4.6
 comm==0.2.2
-contourpy==1.1.1
+contourpy
 cryptography==3.3.2
 cycler==0.12.1
 debugpy==1.8.14
